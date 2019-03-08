@@ -9,13 +9,15 @@ Traditionally, applications were designed to require some identifying informatio
 
 While this is convenient, there are a few problems.
 1. The OAuth2 standard does not specify the interface that OAuth2 providers should offer for the retrieval of personal information. Because of this, OAuth clients (applications) tend to only support a few "social logins", and developers must explicitly enable support for each one individually.
-2. For applications that only want information, the requirement to receive a token and then use it to request the data seems unnecessary in the first place, and developers may be confused by this "fourth leg".
+2. For applications that only want information, the requirement to receive a token and then use it to request the data is onerous, and developers of such applications are likely more confused by this "fourth leg" than by OAuth itself.
 3. Creating an account still requires either already being a user of one of their supported OAuth providers, or entering and remembering a password, which are often undesirable options.
 
 Palmetto is a standard which relies on the same three-party authorization technique as OAuth2, with a few key differences:
 * Every user has their own authorization endpoint.
 * The end result of successful authorization is *the requested data* (e.g., successful authentication), not an opaque token.
 * The interface for common user data (Palmetto's version of OAuth2's "scopes") is specified in the standard.
+* All data values are handled individually, unlike scopes which often grant access to broad areas of functionality.
+* A client may specify optional user data values, for which authentication will be considered successful even if their release is not authorized.
 
 As a consequence, the user's authorization endpoint serves as a unique identifier of the person on the internet. It offers a standard interface to not only _authorize_ release of their data via some proprietary API, but rather to _actually release it_ in a standardized envelope. This dramatically simplifies authentication and account creation flows, and virtually eliminates the need for any password or even cryptography (other than TLS).
 
