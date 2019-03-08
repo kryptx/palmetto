@@ -3,18 +3,18 @@
 
 *Seneca the Younger, De Brevitate Vitæ [ On the shortness of life ]*
 ## Introduction
-Authentication and authorization are difficult topics for many developers.
+Palmetto is a delegated authentication standard for applications.
 
 Traditionally, applications were designed to require some identifying information like a unique username or e-mail address along with a password. Today this pattern is still widely used. More recently, many large companies (but most notably Google, Facebook, Twitter, and Github) have deployed OAuth2 services that allow users of their sites to grant client applications permission to access their information, and in doing so, bypass the registration step.
 
 While this is convenient, there are a few problems.
 1. The OAuth2 standard does not specify the interface that OAuth2 providers should offer for the retrieval of personal information. Because of this, OAuth clients (applications) tend to only support a few "social logins", and developers must explicitly enable support for each one individually.
-2. For applications that only want information, the requirement to receive a token and then use it to request the data seems unnecessary in the first place.
+2. For applications that only want information, the requirement to receive a token and then use it to request the data seems unnecessary in the first place, and developers may be confused by this "fourth leg".
 3. Creating an account still requires either already being a user of one of their supported OAuth providers, or entering and remembering a password, which are often undesirable options.
 
-Palmetto is a standard, not a service, which relies on the same three-legged authorization technique as OAuth2, with a few key differences:
+Palmetto is a standard which relies on the same three-party authorization technique as OAuth2, with a few key differences:
 * Every user has their own authorization endpoint.
-* The result of successful authorization is *the requested data*, not a token.
+* The end result of successful authorization is *the requested data* (e.g., successful authentication), not an opaque token.
 * The interface for common user data (Palmetto's version of OAuth2's "scopes") is specified in the standard.
 
 As a consequence, the user's authorization endpoint serves as a unique identifier of the person on the internet. It offers a standard interface to not only _authorize_ release of their data via some proprietary API, but rather to _actually release it_ in a standardized envelope. This dramatically simplifies authentication and account creation flows, and virtually eliminates the need for any password or even cryptography (other than TLS).
@@ -88,4 +88,3 @@ https://www.lucidchart.com/invitations/accept/5421b962-ddba-42f8-83c1-356896dc3d
 | `location.province` | Province |
 | `location.territory` | Territory |
 | `location.postal_code` | Postal Code |
-```
