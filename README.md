@@ -27,7 +27,9 @@ While this may sound that we believe Palmetto is superior to OAuth, the reality 
 
 ### Palmetto ID
 
-A URL that can be used to retrieve information about a person, if authorized by that person.
+A URL (secure, and preferably omitting `https://`) that can be used to retrieve information about a person, if authorized by that person.
+
+Omitting the protocol is preferred because the URL will be disassembled, and not requested directly.
 
 ### Identity Value (IV)
 
@@ -47,10 +49,14 @@ When sending an authorization request to a PIP, your Resource Server should incl
 
 #### Endpoint: Palmetto Callback
 
-This endpoint will receive the authorization code, and is responsible for exchanging it for information from the PIP, and sending the user on to their business. At this step, BEFORE attempting to perform the code exchange, implementations should:
+This endpoint will receive the authorization code, and is responsible for exchanging it for information from the PIP, and sending the user on to their business. At this step, BEFORE attempting to perform the code exchange, implementations SHOULD:
 
 * Validate a `state` value (provided by the server) which was sent to the authorize endpoint in the first redirect.
 * Validate that the Palmetto ID in the authorization header (provided by the user) has not changed since authorization began.
+
+Additionally, the callback MUST:
+
+* Look up the _palmetto._tcp.host.com SRV record for the host, and use the result (if any) to perform the callback. Services MUST NOT use the URL as provided, or you will be a willing participant in a DDOS attack.
 
 ### Personal Identity Provider (PIP)
 
@@ -96,8 +102,6 @@ https://www.lucidchart.com/invitations/accept/5421b962-ddba-42f8-83c1-356896dc3d
 | `location.territory` | Territory |
 | `location.postal_code` | Postal Code |
 
-## Problems
+## Problems?
 
-* DDOS
-  * If this is to work with *any* identity provider, then resource servers must accept at least arbitrary authorization hostnames.
-  * If resource servers accept arbitrary authorization hostnames, then they can be used to perform a DDOS attack.
+Open an issue.
