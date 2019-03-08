@@ -17,13 +17,13 @@ Palmetto is a standard, not a service, which relies on the same three-legged aut
 * The result of successful authorization is *the requested data*, not a token.
 * The interface for common user data (Palmetto's version of OAuth2's "scopes") is specified in the standard.
 
-As a consequence, the user's authorization endpoint serves as a unique identifier of the person on the internet.
+As a consequence, the user's authorization endpoint serves as a unique identifier of the person on the internet. It offers a standard interface to not only _authorize_ release of their data via some proprietary API, but rather to _actually release it_ in a standardized envelope. This dramatically simplifies authentication and account creation flows, and virtually eliminates the need for any password or even cryptography (other than TLS).
 
 ## Definitions
 
-### Personal Identity Provider (PIP)
+### Palmetto ID
 
-A service which includes at least one pair of endpoints dedicated to an individual user which enable client applications to retrieve information about that user.
+A URL that can be used to retrieve information about a person, if authorized by that person.
 
 ### Identity Value (IV)
 
@@ -33,11 +33,11 @@ A string of data provided by a user to a PIP, such as a name or e-mail address.
 
 ### Resource Server
 
-Just like OAuth2, a Resource Server is the server requesting user identity information. It is expected to implement two RESTful API endpoints in order to facilitate authentication with Palmetto:
+Just like OAuth2, a Resource Server is the server requesting user identity information. It is expected to implement two API endpoints in order to facilitate authentication with Palmetto:
 
 #### Endpoint: Manifest document
 
-The first endpoint is the manifest document. When sending an authorization request to a PIP, your Resource Server should include a `client` property which contains the URL to this document. It should be a JSON document containing:
+When sending an authorization request to a PIP, your Resource Server should include a `client` property which contains the URL to this document. It should be a JSON document containing:
 
 * `callback` - A URL that can receive the authorization code. This can be on a different host, but doing so will result in a warning being displayed by the User Agent.
 
@@ -47,9 +47,11 @@ This endpoint will receive the authorization code, and is responsible for exchan
 
 ### Personal Identity Provider (PIP)
 
-The PIP should implement an endpoint for each user which will be used to retrieve data (via POST) when a valid authorization code is provided.
+A Personal Identity Provider is a service which includes at least one pair of endpoints dedicated to an individual user which enable client applications to retrieve information about that user.
 
-Relative to each such endpoint should be a corresponding `/authorize` endpoint that will ensure the user's presence (via whatever means the PIP implementer wishes).
+The PIP must implement one endpoint for each user which will be used to retrieve data (via POST) when a valid authorization code is provided. This endpoint **is** that user's **Palmetto ID**.
+
+Relative to each such endpoint must exist a corresponding `/authorize` endpoint that will ensure the user's presence (via whatever means the PIP implementer wishes).
 
 Once the user decides whether to grant access, they are redirected to the `next` url that was provided in the authorization request.
 
@@ -59,4 +61,6 @@ User Agents should allow the user to specify what identity is used and, having d
 
 Alongside the prompt for the user to authorize the release of the requested data, the User Agent should independently request the manifest document and prominently present the identifying details of the TLS certificate (especially the company name and domain name). If there is any security risk identified by the User Agent, the user should be adequately warned of the danger of proceeding. The mechanism for this process has not yet been determined, but is likely to be a header on the `/authorize` response.
 
+## Authorization Flow
 
+https://www.lucidchart.com/invitations/accept/5421b962-ddba-42f8-83c1-356896dc3d74
