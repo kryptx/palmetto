@@ -41,11 +41,22 @@ A string of data provided by a user to a PIP, such as a name or e-mail address. 
 
 Just like OAuth2, a Resource Server is the server requesting user identity information. It is expected to implement two API endpoints in order to facilitate authentication with Palmetto:
 
-#### Endpoint: Manifest document
+#### Endpoint: Palmetto Handshake
 
-When sending an authorization request to a PIP, your Resource Server should include a `client` property which contains the URL to this document. It should be a JSON document containing:
+When sending an authorization request to a PIP, your Resource Server should include a `client` property which contains the URL to this endpoint. An honest PIP will call it only after the user is confirmed to be present.
 
-* `callback` - A URL that can receive the authorization code. This can be on a different host, but doing so will result in a warning being displayed by the User Agent.
+The endpoint should accept a Palmetto ID as a parameter, and if:
+
+* The ID is known to have been sent to the server, and
+* The request comes from a host that is among the SRV records for palmetto for the domain in the ID,
+
+Then return a JSON document containing:
+
+* `callback` - A URL that can receive the authorization code.
+  * Should include an unpredictable `state` value that has never been known to the User Agent.
+  * Can be on a different host, but doing so will result in a warning being displayed by the User Agent.
+
+Otherwise, send a 401 that explains the problem.
 
 #### Endpoint: Palmetto Callback
 
