@@ -51,7 +51,7 @@ A Personal Identity Provider is a service which includes at least one pair of en
 
 The PIP must implement one endpoint for each user which will be used to retrieve data (via POST) when a valid authorization code is provided. This endpoint **is** that user's **Palmetto ID**.
 
-Relative to each such endpoint must exist a corresponding `/authorize` endpoint that will ensure the user's presence (via whatever means the PIP implementer wishes).
+Relative to each such endpoint must exist a corresponding `/authorize` endpoint that will ensure the user's presence (via whatever means the PIP implementer wishes) before prompting the user to release the requested IVs to the client.
 
 Once the user decides whether to grant access, they are redirected to the `next` url that was provided in the authorization request.
 
@@ -59,8 +59,33 @@ Once the user decides whether to grant access, they are redirected to the `next`
 
 User Agents should allow the user to specify what identity is used and, having done so, begin sending (e.g.) `Authorization: Palmetto https://palmetto.example.com/jsmith`.
 
-Alongside the prompt for the user to authorize the release of the requested data, the User Agent should independently request the manifest document and prominently present the identifying details of the TLS certificate (especially the company name and domain name). If there is any security risk identified by the User Agent, the user should be adequately warned of the danger of proceeding. The mechanism for this process has not yet been determined, but is likely to be a header on the `/authorize` response.
+Alongside the prompt for the user to authorize the release of requested IVs, the User Agent should independently request the manifest document and prominently present the identifying details of the TLS certificate (especially the company name and domain name). If there is any security risk identified by the User Agent, the user should be adequately warned of the danger of proceeding. The mechanism for this process has not yet been determined.
 
 ## Authorization Flow
 
 https://www.lucidchart.com/invitations/accept/5421b962-ddba-42f8-83c1-356896dc3d74
+
+## Standard Identity Values
+
+| Property | Contents |
+|---|---|
+| `name.display` | Display name |
+| `name.given` | Given (first) name |
+| `name.middle` | Middle name |
+| `name.family` | Family (last) name |
+| `name.full` | Full name |
+| `address.email` | Email address |
+| `address.street` | Street (mailing) address |
+| `telephone.primary` | Primary telephone |
+| `telephone.secondary` | Secondary telephone |
+| `telephone.home` | Home telephone |
+| `telephone.work` | Work telephone |
+| `telephone.mobile` | Mobile telephone |
+| `location.city` | City |
+| `location.county` | County |
+| `location.state` | State |
+| `location.country` | Country |
+| `location.province` | Province |
+| `location.territory` | Territory |
+| `location.postal_code` | Postal Code |
+```
