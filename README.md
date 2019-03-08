@@ -14,7 +14,7 @@ While this is convenient, there are a few problems.
 
 Palmetto is a standard which relies on the same three-party authorization technique as OAuth2, with a few key differences:
 * Every user has their own authorization endpoint.
-* The end result of successful authorization is *the requested data* (e.g., successful authentication), not an opaque token.
+* The end result of successful authorization is *the requested data* (i.e. successful authentication), not an opaque token.
 * The interface for common user data (Palmetto's version of OAuth2's "scopes") is specified in the standard.
 * All data values are handled individually, unlike scopes which often grant access to broad areas of functionality.
 * A client may specify optional user data values, for which authentication will be considered successful even if their release is not authorized.
