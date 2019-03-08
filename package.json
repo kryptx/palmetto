@@ -1,0 +1,21 @@
+{
+  "name": "palmetto-pip-poc",
+  "version": "0.0.1",
+  "description": "A proof-of-concept for the Palmetto Personal Identity Provider",
+  "main": "app.js",
+  "repository": "git@github.com:kryptx/palmetto.git",
+  "author": "Jason Burbage <kryptx@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "apone": "^1.1.0",
+    "boom": "^7.3.0",
+    "bunyan": "^1.8.12",
+    "convict": "^4.4.1",
+    "express": "^4.16.4",
+    "nano": "^8.0.0",
+    "superagent": "^4.1.0"
+  }
+}

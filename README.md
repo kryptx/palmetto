@@ -21,6 +21,8 @@ Palmetto is a standard which relies on the same three-party authorization techni
 
 As a consequence, the user's authorization endpoint serves as a unique identifier of the person on the internet. It offers a standard interface to not only _authorize_ release of their data via some proprietary API, but rather to _actually release it_ in a standardized envelope. This dramatically simplifies authentication and account creation flows, and virtually eliminates the need for any password or even cryptography (other than TLS).
 
+While this may sound that we believe Palmetto is superior to OAuth, the reality is that both systems serve a valuable purpose in certain scenarios. Palmetto is meant only for retrieving user information, while OAuth facilitates authentication against any arbitrary API.
+
 ## Definitions
 
 ### Palmetto ID
@@ -29,7 +31,7 @@ A URL that can be used to retrieve information about a person, if authorized by 
 
 ### Identity Value (IV)
 
-A string of data provided by a user to a PIP, such as a name or e-mail address.
+A string of data provided by a user to a PIP, such as a name or e-mail address. There are standard IVs and you may create any additional IVs that you wish. It is expected that custom IVs be prefixed with a namespace that will guarantee they will remain unique.
 
 ## Components
 
@@ -45,7 +47,10 @@ When sending an authorization request to a PIP, your Resource Server should incl
 
 #### Endpoint: Palmetto Callback
 
-This endpoint will receive the authorization code, and is responsible for exchanging it for information from the PIP, and sending the user on to their business.
+This endpoint will receive the authorization code, and is responsible for exchanging it for information from the PIP, and sending the user on to their business. At this step, BEFORE attempting to perform the code exchange, implementations should:
+
+* Validate a `state` value (provided by the server) which was sent to the authorize endpoint in the first redirect.
+* Validate that the Palmetto ID in the authorization header (provided by the user) has not changed since authorization began.
 
 ### Personal Identity Provider (PIP)
 
@@ -55,7 +60,7 @@ The PIP must implement one endpoint for each user which will be used to retrieve
 
 Relative to each such endpoint must exist a corresponding `/authorize` endpoint that will ensure the user's presence (via whatever means the PIP implementer wishes) before prompting the user to release the requested IVs to the client.
 
-Once the user decides whether to grant access, they are redirected to the `next` url that was provided in the authorization request.
+Once the user authenticates and decides whether to grant access, they are redirected to the callback url in the manifest.
 
 ### User Agent
 
@@ -90,3 +95,9 @@ https://www.lucidchart.com/invitations/accept/5421b962-ddba-42f8-83c1-356896dc3d
 | `location.province` | Province |
 | `location.territory` | Territory |
 | `location.postal_code` | Postal Code |
+
+## Problems
+
+* DDOS
+  * If this is to work with *any* identity provider, then resource servers must accept at least arbitrary authorization hostnames.
+  * If resource servers accept arbitrary authorization hostnames, then they can be used to perform a DDOS attack.
