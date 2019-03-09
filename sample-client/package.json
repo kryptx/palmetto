@@ -16,6 +16,7 @@
     "bunyan": "^1.8.12",
     "convict": "^4.4.1",
     "express": "^4.16.4",
+    "lodash.get": "^4.4.2",
     "nano": "^8.0.0",
     "palmetto": "../node-palmetto/",
     "superagent": "^4.1.0"
