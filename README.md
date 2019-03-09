@@ -45,12 +45,7 @@ Just like OAuth2, a Resource Server is the server requesting user identity infor
 
 When sending an authorization request to a PIP, your Resource Server should include a `client` property which contains the URL to this endpoint. An honest PIP will call it only after the user is confirmed to be present.
 
-The endpoint should accept a Palmetto ID as a parameter, and if:
-
-* The ID is known to have been sent to the server, and
-* The request comes from a host that is among the SRV records for palmetto for the domain in the ID,
-
-Then return a JSON document containing:
+The endpoint should accept a Palmetto ID as a parameter, and if the ID is known to have requested authentication against this server, return a JSON document containing:
 
 * `callback` - A URL that can receive the authorization code.
   * Should include an unpredictable `state` value that has never been known to the User Agent.

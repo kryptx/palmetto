@@ -7,7 +7,8 @@
   "author": "Jason Burbage <kryptx@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "jest"
   },
   "dependencies": {
     "apone": "^1.1.0",
@@ -16,6 +17,7 @@
     "convict": "^4.4.1",
     "express": "^4.16.4",
     "nano": "^8.0.0",
+    "palmetto": "../node-palmetto/",
     "superagent": "^4.1.0"
   }
 }

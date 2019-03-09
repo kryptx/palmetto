@@ -13,6 +13,7 @@ module.exports = exports = {
       if(!req.params.authorization_code) return next(unauthorized('You must provide an authorization code.'));
 
       // send 401 if it doesn't look like they have the right stuff in the session
+      // TODO: validate properly
       if(!req.session.auth            ||
          !req.session.auth.palmettoId ||
          !req.session.auth.state      ||

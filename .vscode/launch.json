@@ -1,0 +1,23 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Client: Launch",
+      "program": "${workspaceFolder}/sample-client/app.js",
+      "cwd": "${workspaceFolder}/sample-client"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Module: Test",
+      "program": "${workspaceFolder}/node-palmetto/node_modules/.bin/jest",
+      "cwd": "${workspaceFolder}/node-palmetto"
+
+    }
+  ]
+}
