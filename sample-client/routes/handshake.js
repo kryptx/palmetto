@@ -1,6 +1,5 @@
 'use strict';
 
-const { promisify } = require('util');
 const Callback = require('./callback');
 const { unauthorized } = require('boom');
 const get = require('lodash.get');
@@ -10,7 +9,6 @@ const get = require('lodash.get');
  * requested authentication against this server, return a JSON document containing:
  *
  * - `callback` - A URL that can receive the authorization code.
- *   - Can be on a different host, but doing so will result in a warning being displayed by the User Agent.
  * - `state` - an unpredictable value to be included in the callback
  *
  * Otherwise, send a 401 that explains the problem.
@@ -27,7 +25,5 @@ module.exports = exports = {
       callback: svc.config.get('base_url') + Callback.path,
       state: req.session.auth.palmetto.state
     });
-
-    return next();
   }
 }

@@ -2,5 +2,6 @@
 
 const Handshake = require('./handshake');
 const Callback = require('./callback');
+const Whoami = require('./whoami');
 
-module.exports = [ Handshake, Callback ];
+module.exports = [ Handshake, Callback, Whoami ];

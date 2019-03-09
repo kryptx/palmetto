@@ -12,10 +12,13 @@
   },
   "dependencies": {
     "apone": "^1.1.0",
+    "body-parser": "^1.18.3",
     "boom": "^7.3.0",
     "bunyan": "^1.8.12",
     "convict": "^4.4.1",
     "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "joi": "^14.3.1",
     "lodash.get": "^4.4.2",
     "nano": "^8.0.0",
     "palmetto": "../node-palmetto/",

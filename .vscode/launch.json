@@ -9,7 +9,8 @@
       "request": "launch",
       "name": "Client: Launch",
       "program": "${workspaceFolder}/sample-client/app.js",
-      "cwd": "${workspaceFolder}/sample-client"
+      "cwd": "${workspaceFolder}/sample-client",
+      "envFile": "${workspaceFolder}/sample-client/.env"
     },
     {
       "type": "node",

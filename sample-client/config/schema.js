@@ -1,6 +1,14 @@
 'use strict';
 
 module.exports = {
+  session: {
+    secret: {
+      doc: 'A secret value for session signatures',
+      format: String,
+      default: '',
+      env: 'SESSION_SECRET'
+    }
+  },
   env: {
     doc: 'The environment configuration file to use',
     format: String,
