@@ -25,13 +25,18 @@ While this may sound that we believe Palmetto is superior to OAuth, the reality 
 
 ## Definitions
 
-### Palmetto ID
+### Palmetto Authorization Request
+A request to a PIP to prompt the user to authorize the release of data, likely for the purpose of authentication. In this document, may be referred to as "authentication request".
 
+### Palmetto Authentication Request
+A request to a Resource Server including a Palmetto ID, signaling that the user wants to provide identifying information. In this document, may be referred to as "authorization request".
+
+### Palmetto ID
 A combination of a palmetto domain (a domain which has a palmetto SRV record) and a path, which can be used to retrieve information about a person if authorized by that person.
 
 The protocol is omitted because:
-* A Palmetto ID should be able to be as short and convenient as an e-mail address
-* The apparent URL is not requested directly by the resource server; the protocol would have to be removed anyway.
+* It is desirable that a Palmetto ID be able to be as short and convenient as an e-mail address.
+* Since the URL is not requested directly by the resource server, the protocol would have to be removed anyway.
 
 ### Identity Value (IV)
 
@@ -43,28 +48,42 @@ A string of data provided by a user to a PIP, such as a name or e-mail address. 
 
 Like OAuth, a Resource Server is the server requesting user identity information. It is expected to implement two API endpoints in order to facilitate authentication with Palmetto:
 
-#### Endpoint: Palmetto Handshake
+#### Endpoint: Palmetto Root
 
-When sending an authorization request to a PIP, your Resource Server should include a `client` property which contains the URL to this endpoint. An honest PIP will call it only after the user is confirmed to be present.
+The Resource Server should provide a URL in the `client` field. When accessed over HTTPS, it should respond with a JSON object containing a `callback` property, which contains a valid Palmetto callback URL for this service.
 
-The endpoint should accept a Palmetto ID as a parameter, and if the ID is known to have requested authentication against this server, return a JSON document containing:
-
-* `callback` - A URL that can receive the authorization code.
-  * Should include an unpredictable `state` value that has never been known to the User Agent.
-  * Can be on a different host, but doing so will result in a warning being displayed by the User Agent.
-
-Otherwise, send a 401 that explains the problem.
+This serves as an alternative to client pre-registration, and provides an opportunity for the end user to verify using TLS the entity which will be receiving their data.
 
 #### Endpoint: Palmetto Callback
 
-This endpoint will receive the authorization code, and is responsible for exchanging it for information from the PIP, and sending the user on to their business. At this step, BEFORE attempting to perform the code exchange, implementations SHOULD:
+This endpoint will receive the authorization code, and is responsible for exchanging it for information from the PIP, and sending the user on to their business. At this step, BEFORE attempting to perform the code exchange, implementations SHOULD validate that the Palmetto ID in the query string matches the one that requested authorization for this session.
 
-* Validate a `state` value (provided by the server) which was sent to the server.
-* Validate that the Palmetto ID in the authorization header (provided by the user) has not changed since authorization began.
+#### Initiating login
+In the context of Palmetto, a "login request" or "authentication request" is a request to your resource server that contains an `Authorization` header which contains `Palmetto ` followed by a Palmetto ID.
 
-Additionally, the callback MUST:
+Upon receiving an authentication request, the service MUST look up the _palmetto._tcp.host.com SRV record for the host, and use the result to request authorization. Preferably, the host should cache this lookup, since it will be needed to perform the callback.
 
-* Look up the _palmetto._tcp.host.com SRV record for the host, and use the result (if any) to perform the callback. Services MUST NOT use the URL as provided, or you will be a willing participant in a DDOS attack.
+Services MUST NOT use the Palmetto ID directly as a URL to authorize an authentication request.
+
+An authorization request is performed by sending the User Agent to the host and port found in the SRV record, followed by the path, and the additional path component `/authorize`. For instance, if `_palmetto._tcp.plmto.com` resolves at highest priority to `login.palmetto-id.com:443` then an application receiving a Palmetto ID of `plmto.com/kryptx` should cause the browser to be redirected to https://login.palmetto-id.com:443/kryptx/authorize with the following query parameters:
+
+* `id` - the Palmetto ID that has requested authentication.
+* `client` - an HTTPS URL, owned by the requesting application, that will provide the callback URL.
+* `require` - data that's required to continue, in the form of a comma-delimited list of IV keys.
+* `request` - an additional comma-delimited list of IVs to request but which are not required.
+* `code_challenge` - a Base64-encoded hash of a random value that has been stored by the resource server.
+* `code_challenge_method` - the algorithm that was used to produce the hash.
+
+#### Completing login
+After the user has granted access to the required IVs to the satisfaction of the PIP owner, they will be redirected (with an `authorization_code` in the query string) to the callback specified in the Palmetto Root. The Resource Server sends an HTTPS POST to the base URL generated by the Palmetto ID (in the above example, to `https://login.palmetto-id.com:443/kryptx) with the following values in the request body:
+
+* `code` - The authorization code presented by the end user.
+* `code_challenge_verifier` - the random value that was previously hashed to form `code_challenge`
+
+The Resource server should verify that all required IVs are present.
+
+* If not, it most likely means they are using a non-conforming PIP. You are encouraged to reject the authorization code.
+* If so, the data may be treated as belonging to that Palmetto ID.
 
 ### Personal Identity Provider (PIP)
 
