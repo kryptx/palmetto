@@ -6,10 +6,6 @@ module.exports = exports = {
   path: '/grantPrompt',
   method: 'get',
   handle: (req, res, next) => {
-    if(!req.session.auth || req.session.user.palmettoId !== req.session.auth.id) {
-      return next(badRequest('No authorization in progress.'));
-    }
-
     if(!req.session.user) {
       req.session.next = req.originalUrl;
       res.set('Location', '/login');
@@ -17,6 +13,10 @@ module.exports = exports = {
       return;
     }
 
-    res.render('prompt', req.session.auth);
+    if(!req.session.authRequest || req.session.user.palmetto.id !== req.session.authRequest.id) {
+      return next(badRequest('No authorization in progress.'));
+    }
+
+    res.render('prompt', req.session.authRequest);
   }
 };

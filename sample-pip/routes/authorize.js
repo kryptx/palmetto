@@ -2,8 +2,8 @@
 
 const Joi = require('joi');
 
-const joi = Joi.extend((joi) => ({
-  base: joi.array(),
+const joi = Joi.extend((original) => ({
+  base: original.array(),
   name: 'stringArray',
   coerce: (value, _, __) => (typeof(value) === 'string' ? value.split(',') : value)
 }));
@@ -13,12 +13,13 @@ module.exports = exports = {
   method: 'get',
   validation: {
     params: Joi.object().keys({
-      userId: Joi.string().min(1),
+      userId: Joi.string().min(1).required(),
     }),
     query: Joi.object().keys({
-      id: Joi.string().regex(/[\w-]+(\.[\w-]+)+\/[\w-\.~:/+]+$/i),
-      client: Joi.string().uri({ scheme: 'https' }),
-      ivs: joi.stringArray().items(Joi.string())
+      id: Joi.string().regex(/[\w-]+(\.[\w-]+)+\/[\w-\.~:/+]+$/i).required(),
+      client: Joi.string().uri({ scheme: 'https' }).required(),
+      require: joi.stringArray().items(Joi.string()).required(),
+      request: joi.stringArray().items(Joi.string()).default([]),
     })
   },
   handle: (req, res, next) => {
@@ -26,8 +27,15 @@ module.exports = exports = {
     // since the user may arrive here with or without a session,
     // store the data and send them to the grant prompt
     // even if the user didn't exist, we wouldn't tell them yet
-    req.session.authRequest = { id, client, ivs };
+    req.session.authRequest = {
+      userId: req.params.userId,
+      id: req.query.id,
+      client: req.query.client,
+      require: req.query.require,
+      request: req.query.request || []
+    };
+
     res.set('Location', '/grantPrompt');
-    res.status(303).send();
+    res.status(302).send();
   }
 };

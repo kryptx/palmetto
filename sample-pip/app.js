@@ -5,6 +5,7 @@ const Session = require('express-session');
 const Apone = require('apone');
 const Nano = require('nano');
 const BodyParser = require('body-parser');
+const { boomify } = require('boom');
 const routes = require('./routes');
 
 const config = require('./config');
@@ -26,9 +27,17 @@ apone.register(routes, { config, db });
 app.use(Express.static('public'));
 
 app.use(function(err, req, res, next) {
-  if(!err.isBoom) { return next(err); }
+  if(!err.isBoom) {
+    if(err.name === 'ValidationError') {
+      err = boomify(err, { statusCode: 400, message: err.message });
+    } else {
+      console.error(err);
+      err = boomify(err);
+    }
+  }
   let { statusCode, payload } = err.output;
   res.status(statusCode).json(payload);
 });
+
 
 app.listen(3000);
