@@ -1,0 +1,12 @@
+html
+  head
+    title Login Form
+  body
+    form(action="/login", method="post")
+      strong Please provide a username and password to continue.
+      p Username
+        input(type="text", name="username")
+      p Password
+        input(type="text", name="password")
+
+      input(type="submit", value="Log In")

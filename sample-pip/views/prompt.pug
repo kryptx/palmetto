@@ -1,0 +1,17 @@
+html
+  head
+    title Grant Prompt
+  body
+    form(action="/complete", method="post")
+      strong The site at #{client} requires access the following information:
+      ul
+        each val in require
+          li= val
+      strong In addition, you may choose to provide the following optional values:
+      ul
+        each val in request
+          li
+            input(type='checkbox' name='agreement' checked)= val
+
+      input(type="submit", name="result", value="Approve")
+      input(type="submit", name="result", value="Reject")

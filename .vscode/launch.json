@@ -7,6 +7,14 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "PIP: Launch",
+      "program": "${workspaceFolder}/sample-pip/app.js",
+      "cwd": "${workspaceFolder}/sample-pip",
+      "envFile": "${workspaceFolder}/sample-pip/.env"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Client: Launch",
       "program": "${workspaceFolder}/sample-client/app.js",
       "cwd": "${workspaceFolder}/sample-client",
