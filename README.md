@@ -19,24 +19,24 @@ Palmetto is a standard which relies on the same three-party authorization techni
 * All data values are handled individually, unlike scopes which often grant access to broad areas of functionality.
 * A client may specify optional user data values, for which authentication will be considered successful even if their release is not authorized.
 
-As a consequence, the user's authorization endpoint serves as a unique identifier of the person on the internet. It offers a standard interface to not only _authorize_ release of their data via some proprietary API, but rather to _actually release it_ in a standardized envelope. This dramatically simplifies authentication and account creation flows, and virtually eliminates the need for any password or even cryptography (other than TLS).
+As a consequence, the user's authorization endpoint serves as a unique identifier of the person on the internet. It offers a standard interface to not only _authorize_ release of their data via some proprietary API, but also to _actually release it_ in a standardized envelope. This dramatically simplifies authentication and account creation flows, and virtually eliminates the need for any password or even cryptography (other than TLS).
 
 While this may sound that we believe Palmetto is superior to OAuth, the reality is that both systems serve a valuable purpose in certain scenarios. Palmetto is meant only for retrieving user information, while OAuth is a complete standard for authorizing any application (particularly services) to perform any action at all that the user allows them to. Palmetto is meant to better serve the needs of those who only use OAuth for user registration and login.
 
 ## Definitions
 
 ### Palmetto Authorization Request
-A request to a PIP to prompt the user to authorize the release of data, likely for the purpose of authentication. In this document, may be referred to as "authentication request".
+A request to a PIP to prompt the user to authorize the release of data, likely for the purpose of authentication. In this document, may be referred to as an "authorization request".
 
 ### Palmetto Authentication Request
-A request to a Resource Server including a Palmetto ID, signaling that the user wants to provide identifying information. In this document, may be referred to as "authorization request".
+A request to a Resource Server including a Palmetto ID, signaling that the user wants to provide identifying information. In this document, may be referred to as an "authentication request".
 
 ### Palmetto ID
 A combination of a palmetto domain (a domain which has a palmetto SRV record) and a path, which can be used to retrieve information about a person if authorized by that person.
 
 The protocol is omitted because:
 * It is desirable that a Palmetto ID be able to be as short and convenient as an e-mail address.
-* Since the URL is not requested directly by the resource server, the protocol would have to be removed anyway.
+* Since the URL is not requested directly for any part of the authorization flow, the protocol would have to be removed anyway.
 
 ### Identity Value (IV)
 
@@ -93,7 +93,7 @@ The PIP must implement one endpoint for each user which will be used to retrieve
 
 Relative to each such endpoint must exist a corresponding `/authorize` endpoint that will ensure the user's presence (via whatever means the PIP implementer wishes) before prompting the user to release the requested IVs to the client.
 
-Once the user authenticates and decides whether to grant access, they are redirected to the callback url in the manifest.
+Once the user authenticates and decides whether to grant access, they are redirected to the callback url in the root document.
 
 ### User Agent
 
