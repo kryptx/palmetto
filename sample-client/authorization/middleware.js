@@ -3,7 +3,7 @@
 const { createHash } = require('crypto');
 const { promisify } = require('util');
 const resolveSrv = promisify(require('dns').resolveSrv);
-const { parseHeader } = require('palmetto');
+const { parseHeader } = require('../palmetto');
 const { unauthorized } = require('boom');
 const Querystring = require('querystring');
 

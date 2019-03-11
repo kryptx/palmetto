@@ -8,7 +8,7 @@ const Callback = require('./callback');
 module.exports = exports = {
   path: '/palmetto',
   method: 'get',
-  handle: svc => async (req, res, next) => {
+  handle: svc => (req, res, next) => {
     res.json({
       callback: svc.config.get('base_url') + Callback.path
     });

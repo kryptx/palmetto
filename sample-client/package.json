@@ -20,7 +20,6 @@
     "express-session": "^1.15.6",
     "joi": "^14.3.1",
     "lodash.get": "^4.4.2",
-    "palmetto": "../node-palmetto/",
     "superagent": "^4.1.0"
   }
 }

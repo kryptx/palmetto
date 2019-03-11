@@ -24,7 +24,6 @@
     "lodash.set": "^4.3.2",
     "nano": "^8.0.0",
     "node-cache": "^4.2.0",
-    "palmetto": "../node-palmetto/",
     "pug": "^2.0.3",
     "superagent": "^4.1.0"
   }
