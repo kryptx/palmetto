@@ -12,23 +12,28 @@ Traditionally, applications were designed to require some identifying informatio
 While this is convenient, there are a few problems.
 1. The OAuth standards do not specify the interface that OAuth providers should offer for the retrieval of personal information. Because of this, OAuth clients (applications) tend to only support a few "social logins", and developers must explicitly enable support for each one individually.
 2. For applications that only want information, the requirement to receive a token and then use it to request the data is onerous, and developers of such applications are likely more confused by this "fourth leg" than by OAuth itself.
-3. Creating an account still requires either already being a user of one of their supported OAuth providers, or entering and remembering a password, which are often undesirable options.
+3. Creating an account still requires either already being a user of one of their supported OAuth providers (there is no truly generic "OAuth Login"), or entering and remembering a password, which are often undesirable options.
+
+Even more recently, the OpenID Connect (OIDC) standard has been published, which builds further on top of OAuth2 to address some of the above issues, along with Dynamic Client Registration which, theoretically, fully democratizes identity. The reality is that because of the burden of understanding and implementing such a large standard, some significant portion of developers elect not to implement this interoperable form of delegated authentication and instead opt for re-implementing probably-insecure password schemes or a limited selection of identity providers.
 
 ### Introducing Palmetto
 
-Palmetto is a standard which relies on a very similar three-party authorization technique to OAuth2's authorization code flow (with PKCE), with a few key differences:
-* Every user has their own authorization endpoint.
-* Clients do not pre-register; instead, they publish a callback URL.
-* The end result of successful authorization is *the requested data* (i.e. successful authentication), not an opaque token.
-* The interface for common user data is specified in the standard.
-* All data values are handled individually, unlike scopes which often grant access to broad areas of functionality.
-* A client may specify optional user data values, for which authentication will be considered successful even if their release is not authorized.
+Palmetto is a standard (under development) which essentially extracts the concept of **an OpenID Connect authorization_code grant type with PKCE for `openid` scopes and `response_type: id_token`** into a single opinionated flow, offering the simplest possible access to identifying information. Other than limiting flow, grant type, and response contents, there are a few other differences:
+* Servers rely on SRV records to prevent Resource Servers from being used as open redirects.
+* Clients do not pre-register (nor do they dynamically register); instead, they publish a callback URL.
+* Data is returned directly in a response body, unsigned.
+  * The signature itself proves a subset of that which is guaranteed by TLS, which is required by Palmetto.
+  * To mitigate attacks resulting from DNS hijacking a valid PIP hostname, resource servers may additionally choose to only allow authentication against identity providers presenting OV or EV certificates.
+* All data values are handled individually; Identity Providers are expected to manage presentation to ensure users aren't visually overwhelmed.
 
-The user's authorization endpoint serves as a unique identifier of the person on the internet. It offers a standard interface to not only _authorize_ release of their data via some proprietary API, but also to _actually release it_ in a standardized envelope. This dramatically simplifies authentication and account creation flows, and virtually eliminates the need for any password, other than the one protecting the identity itself.
+As with OpenID Connect, the user's authorization endpoint serves as a unique identifier of the person on the internet. It offers a standard interface to not only _authorize_ release of their data via some proprietary API, but also to _actually release it_ in a standardized envelope.
 
-While this may sound that we believe Palmetto is superior to OAuth, the reality is that both systems serve a valuable purpose in certain scenarios. Palmetto is meant only for retrieving user information, while OAuth is a complete standard for authorizing any application (particularly services) to perform any action at all that the user allows them to. In addition, a Palmetto Personal Identity Provider can rely on existing OAuth services to perform these authorizations.
+Compared to OpenID Connect, however, Palmetto is simple to understand and implement, as demonstrated by the PIP and client in this repository. Our hope is that this simplifies authentication and account creation flows, particularly for hobbyist and amateur developers, and virtually eliminates the need for any user to store or send any password, other than the one protecting the identity itself (if one exists).
 
-In other words: OAuth is still the standard of choice for building applications that integrate with external services. Palmetto is meant to make "logging in" easier and safer for everyone, regardless of whether OAuth is used.
+Crucially, implementations of Palmetto Personal Identity Providers may choose to authenticate their users any way they wish, including using OpenID Connect to delegate to another authority. Palmetto is intended to improve two things:
+
+* The application interface contract between an identity provider and an application that requires login, and
+* The actual user interface required to actually "sign up" or "log in".
 
 ## Definitions
 
@@ -114,6 +119,10 @@ https://www.lucidchart.com/invitations/accept/5421b962-ddba-42f8-83c1-356896dc3d
 
 ## Standard Identity Values
 
+Some of the names shown below can be interpreted in an ambiguous way. In a sense, the functionality offered by Palmetto can be thought of as "delegated auto-fill". As such, we don't feel this is necessarily a problem.
+
+Other names appear to be redundant. For instance, there are not only primary and secondary telephone, but also home, mobile, and work. Likely your primary is also one of those; we think it's reasonable for an application to request any dimension of your data, and don't believe it's a burden for a user to identify a phone number as both 'primary' and 'mobile'.
+
 | Property | Contents |
 |---|---|
 | `name.display` | Display name |
@@ -128,6 +137,7 @@ https://www.lucidchart.com/invitations/accept/5421b962-ddba-42f8-83c1-356896dc3d
 | `telephone.home` | Home telephone |
 | `telephone.work` | Work telephone |
 | `telephone.mobile` | Mobile telephone |
+| `location.locale` | Locale |
 | `location.city` | City |
 | `location.county` | County |
 | `location.state` | State |
