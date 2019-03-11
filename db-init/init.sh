@@ -22,7 +22,7 @@ if [ ! -z "$DB" ]; then
     echo "Creating database: \"$DB\"..."
     curl -X PUT $URL/$DB
 
-    curl -X PUT $URL/users/_design/username --data '{"views": {"username": {"map": "function(doc) { emit(doc.title, doc) }"}}}' 
+    curl -X PUT $URL/users/_design/by-username --data '{"views": {"username": {"map": "function(doc) { emit(doc.username, null) }"}}}' 
 fi
 
 echo "========================================================================"
