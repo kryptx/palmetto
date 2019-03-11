@@ -5,6 +5,7 @@ const { randomBytes } = require('crypto');
 const { promisify } = require('util');
 const get = require('lodash.get');
 const set = require('lodash.set');
+const Joi = require('joi');
 
 function getApprovedData(req) {
   let result = {};
