@@ -2,8 +2,10 @@
 > It is not that we have so little time but that we lose so much. … The life we receive is not short but we make it so; we are not ill provided but use what we have wastefully.
 
 *Seneca the Younger, De Brevitate Vitæ [ On the shortness of life ]*
-## Introduction
+## Introduction and Discussion
 Palmetto is a delegated authentication standard for applications.
+
+### Problem Statement
 
 Traditionally, applications were designed to require some identifying information like a unique username or e-mail address along with a password. Today this pattern is still widely used. More recently, many large companies (but most notably Google, Facebook, Twitter, and Github) have deployed OAuth services that allow users of their sites to grant client applications permission to access their information, and in doing so, bypass the registration step.
 
@@ -12,18 +14,21 @@ While this is convenient, there are a few problems.
 2. For applications that only want information, the requirement to receive a token and then use it to request the data is onerous, and developers of such applications are likely more confused by this "fourth leg" than by OAuth itself.
 3. Creating an account still requires either already being a user of one of their supported OAuth providers, or entering and remembering a password, which are often undesirable options.
 
-Palmetto is a standard which relies on a very similar three-party authorization technique to OAuth2's authorization code flow with PKCE, with a few key differences:
+### Introducing Palmetto
+
+Palmetto is a standard which relies on a very similar three-party authorization technique to OAuth2's authorization code flow (with PKCE), with a few key differences:
 * Every user has their own authorization endpoint.
+* Clients do not pre-register; instead, they publish a callback URL.
 * The end result of successful authorization is *the requested data* (i.e. successful authentication), not an opaque token.
 * The interface for common user data is specified in the standard.
 * All data values are handled individually, unlike scopes which often grant access to broad areas of functionality.
 * A client may specify optional user data values, for which authentication will be considered successful even if their release is not authorized.
 
-As a consequence, the user's authorization endpoint serves as a unique identifier of the person on the internet. It offers a standard interface to not only _authorize_ release of their data via some proprietary API, but also to _actually release it_ in a standardized envelope. This dramatically simplifies authentication and account creation flows, and virtually eliminates the need for any password, other than the one protecting the identity itself.
+The user's authorization endpoint serves as a unique identifier of the person on the internet. It offers a standard interface to not only _authorize_ release of their data via some proprietary API, but also to _actually release it_ in a standardized envelope. This dramatically simplifies authentication and account creation flows, and virtually eliminates the need for any password, other than the one protecting the identity itself.
 
 While this may sound that we believe Palmetto is superior to OAuth, the reality is that both systems serve a valuable purpose in certain scenarios. Palmetto is meant only for retrieving user information, while OAuth is a complete standard for authorizing any application (particularly services) to perform any action at all that the user allows them to. In addition, a Palmetto Personal Identity Provider can rely on existing OAuth services to perform these authorizations.
 
-In other words: OAuth is still the standard of choice for building applications that integrate with external services. Palmetto is meant to make logging in easier and safer for everyone.
+In other words: OAuth is still the standard of choice for building applications that integrate with external services. Palmetto is meant to make "logging in" easier and safer for everyone, regardless of whether OAuth is used.
 
 ## Definitions
 
@@ -74,7 +79,7 @@ An authorization request is performed by sending the User Agent to the host and 
 * `require` - data that's required to continue, in the form of a comma-delimited list of IV keys.
 * `request` - an additional comma-delimited list of IVs to request but which are not required.
 * `code_challenge` - a Base64-encoded hash of a random value that has been stored by the resource server.
-* `code_challenge_method` - the algorithm that was used to produce the hash.
+* `code_challenge_method` - the algorithm that was used to produce the hash. Should use the types specified by the IANA's PKCE Code Challenge Methods
 
 #### Completing login
 After the user has granted access to the required IVs to the satisfaction of the PIP owner, they will be redirected (with an `authorization_code` in the query string) to the callback specified in the Palmetto Root. The Resource Server sends an HTTPS POST to the base URL generated by the Palmetto ID (in the above example, to `https://login.palmetto-id.com:443/kryptx) with the following values in the request body:
@@ -84,7 +89,7 @@ After the user has granted access to the required IVs to the satisfaction of the
 
 The Resource server should verify that all required IVs are present.
 
-* If not, it most likely means they are using a non-conforming PIP. You are encouraged to reject the authorization code.
+* If not, it most likely means they are using a non-conforming PIP. You are encouraged to reject the authentication request.
 * If so, the data may be treated as belonging to that Palmetto ID.
 
 ### Personal Identity Provider (PIP)
@@ -101,7 +106,7 @@ Once the user authenticates and decides whether to grant access, they are redire
 
 User Agents should allow the user to specify what identity is used and, having done so, provide an interface element that allows the user to reload the page and send a header of the form `Authorization: Palmetto {Palmetto ID}`, e.g. `Authorization: Palmetto https://palmetto.example.com/jsmith`.
 
-Alongside the prompt for the user to authorize the release of requested IVs, the User Agent should independently perform the Palmetto handshake and prominently present the identifying details of the TLS certificate (especially the company name and domain name). If there is any security risk identified by the User Agent, the user should be adequately warned of the danger of proceeding. The mechanism for this process has not yet been determined.
+Alongside the prompt for the user to authorize the release of requested IVs, the User Agent should independently request the Palmetto root document and prominently present the identifying details of the TLS certificate (especially the company name and domain name). If there is any security risk identified by the User Agent, the user should be adequately warned of the danger of proceeding. The mechanism for this process has not yet been determined.
 
 ## Authorization Flow
 
