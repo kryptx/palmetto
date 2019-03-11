@@ -5,12 +5,15 @@ const Session = require('express-session');
 const Apone = require('apone');
 const Nano = require('nano');
 const BodyParser = require('body-parser');
+const Cache = require('node-cache');
+const Request = require('superagent');
 const { boomify } = require('boom');
 const routes = require('./routes');
 
 const config = require('./config');
 const db = Nano(`http://${config.get('db.host')}:${config.get('db.port')}`)
   .use(config.get('db.name'));
+const cache = new Cache({ stdTTL: 60, checkperiod: 10 });
 
 let app = Express();
 app.use([ BodyParser.json(), BodyParser.urlencoded({ extended: false }) ]);
@@ -22,7 +25,7 @@ app.use(Session({
 }));
 
 let apone = new Apone(app);
-apone.register(routes, { config, db });
+apone.register(routes, { config, db, cache, Request });
 
 app.use(Express.static('public'));
 

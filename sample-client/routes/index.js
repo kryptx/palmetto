@@ -1,7 +1,7 @@
 'use strict';
 
-const Handshake = require('./handshake');
+const Root = require('./root');
 const Callback = require('./callback');
 const Whoami = require('./whoami');
 
-module.exports = [ Handshake, Callback, Whoami ];
+module.exports = [ Root, Callback, Whoami ];

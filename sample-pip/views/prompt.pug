@@ -4,20 +4,24 @@ html
   body
 
     div(class="container")
-      div(class="card card-container")
+      div(class="panel card-container")
         form(action="/complete", method="post")
-          strong The site at #{client} requires access to the following information:
-          ul
+          p
+            strong The site at #{client} requires access to the following information:
+          ul(class="list-group")
             each val in require
-              li= val
-          strong In addition, you may choose to provide the following optional values:
-          ul
+              li(class="list-group-item")= val
+          p
+            strong In addition, you may choose to provide the following optional values:
+          ul(class="list-group")
             each val in request
-              li
-                input(type='checkbox' name='agreement' checked)
-                | #{val}
-
-          input(type="submit", class="btn btn-success", name="result", value="Approve")
-          input(type="submit", class="btn btn-danger", name="result", value="Reject")
+              label(for="allow.#{val}")
+                li(class="list-group-item")
+                  input(type='checkbox' name='allow[#{val}]' id="allow.#{val}" checked)
+                  |  #{val}
+          p(class="text-center")
+            input(type="submit", class="btn btn-success", name="result", value="Approve")
+            | &nbsp;
+            input(type="submit", class="btn btn-danger", name="result", value="Reject")
 
     include includes/foot.pug

@@ -15,6 +15,15 @@
   padding: 40px 40px;
 }
 
+.card-container.panel {
+  max-width: 450px;
+  padding: 20px 40px;
+}
+
+p {
+  margin-top: 20px;
+}
+
 .btn {
   font-weight: 700;
   height: 36px;
@@ -27,7 +36,7 @@
 /*
 * Card component
 */
-.card {
+.card, .panel {
   background-color: #F7F7F7;
   /* just in case there no content*/
   padding: 20px 25px 30px;
