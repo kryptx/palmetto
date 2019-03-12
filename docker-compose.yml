@@ -20,6 +20,7 @@ services:
       - db
   pip:
     build: ./sample-pip
+    restart: on-failure
     depends_on:
       - db_init
     links:
@@ -34,9 +35,23 @@ services:
       # - DB_PASSWORD=123456
   client:
     build: ./sample-client
+    restart: on-failure
     depends_on:
       - pip
     ports:
       - "4001:3000"
     environment:
       - SESSION_SECRET=trench
+  nginx:
+    image: staticfloat/nginx-certbot
+    restart: on-failure
+    depends_on:
+      - pip
+      - client
+    environment:
+      - CERTBOT_EMAIL=jhgaylor@gmail.com
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./deploy/nginx/:/etc/nginx/conf.d/
