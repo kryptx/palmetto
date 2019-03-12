@@ -45,11 +45,12 @@ services:
   nginx:
     image: staticfloat/nginx-certbot
     restart: on-failure
-    depends_on:
+    links:
       - pip
       - client
     environment:
       - CERTBOT_EMAIL=jhgaylor@gmail.com
+      - IS_STAGING=1
     ports:
       - "443:443"
       - "80:80"

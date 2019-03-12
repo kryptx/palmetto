@@ -36,6 +36,13 @@ resource "digitalocean_floating_ip_assignment" "all_in_one" {
   droplet_id = "${digitalocean_droplet.all_in_one.id}"
 }
 
+resource "digitalocean_record" "foo" {
+  domain = "${digitalocean_domain.plmto_com.name}"
+  type   = "A"
+  name   = "foo"
+  value  = "${digitalocean_floating_ip.all_in_one.ip_address}"
+}
+
 resource "digitalocean_record" "pip" {
   domain = "${digitalocean_domain.plmto_com.name}"
   type   = "A"
