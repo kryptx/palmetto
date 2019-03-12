@@ -42,14 +42,8 @@ cat << EOF > /opt/palmetto/docker-compose.yml
 $${docker_compose_yaml}
 EOF
 
-mkdir -p /opt/palmetto/nginx-conf/
-cat << EOF > /opt/palmetto/nginx-conf/plmto.com.conf
+cat << EOF > /opt/palmetto/nginx.conf
 $${nginx_conf}
-EOF
-
-mkdir -p /opt/palmetto/nginx-conf/
-cat << EOF > /opt/palmetto/nginx-conf/certbot.conf
-$${nginx_certbot_conf}
 EOF
 
 cd /opt/palmetto
@@ -59,7 +53,6 @@ USER_DATA
   vars = {
     docker_compose_yaml = "${data.local_file.docker_compose_yaml.content}"
     nginx_conf = "${data.local_file.nginx_config.content}"
-    nginx_certbot_conf = "${data.local_file.nginx_certbot_config.content}"
   }
 }
 
@@ -68,9 +61,5 @@ data "local_file" "docker_compose_yaml" {
 }
 
 data "local_file" "nginx_config" {
-  filename = "${path.module}/nginx-config/plmto.com.conf"
-}
-
-data "local_file" "nginx_certbot_config" {
-  filename = "${path.module}/nginx-config/certbot.conf"
+  filename = "${path.module}/nginx.conf"
 }
