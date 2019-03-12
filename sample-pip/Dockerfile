@@ -1,4 +1,5 @@
 FROM node:10-alpine AS base
+MAINTAINER kryptx@gmail.com
 
 RUN apk --no-cache add g++ gcc libgcc libstdc++ linux-headers make python
 RUN npm install --quiet node-gyp -g
