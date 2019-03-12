@@ -1,6 +1,6 @@
 'use strict';
 
-const { createHash } = require('crypto');
+const { createHash, randomBytes } = require('crypto');
 const { promisify } = require('util');
 const resolveSrv = promisify(require('dns').resolveSrv);
 const { parseHeader } = require('../palmetto');
