@@ -24,7 +24,7 @@ resource "digitalocean_record" "srv" {
   priority = 65535
   name     = "_palmetto._tcp"
   port     = 443
-  value    = "pip"
+  value    = "pip1"
 }
 
 resource "digitalocean_floating_ip" "all_in_one" {
@@ -36,10 +36,17 @@ resource "digitalocean_floating_ip_assignment" "all_in_one" {
   droplet_id = "${digitalocean_droplet.all_in_one.id}"
 }
 
-resource "digitalocean_record" "foo" {
+resource "digitalocean_record" "pip1" {
   domain = "${digitalocean_domain.plmto_com.name}"
   type   = "A"
-  name   = "foo"
+  name   = "pip1"
+  value  = "${digitalocean_floating_ip.all_in_one.ip_address}"
+}
+
+resource "digitalocean_record" "app" {
+  domain = "${digitalocean_domain.plmto_com.name}"
+  type   = "A"
+  name   = "app"
   value  = "${digitalocean_floating_ip.all_in_one.ip_address}"
 }
 
