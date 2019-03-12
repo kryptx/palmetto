@@ -2,6 +2,7 @@ version: '3'
 services:
   db:
     image: couchdb
+    restart: on-failure
     ports:
       - "5984:5984"
       - "4369:4369"
