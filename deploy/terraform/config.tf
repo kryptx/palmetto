@@ -68,9 +68,9 @@ data "local_file" "docker_compose_yaml" {
 }
 
 data "local_file" "nginx_config" {
-  filename = "${path.module}/../nginx/plmto.com.conf"
+  filename = "${path.module}/nginx-config/plmto.com.conf"
 }
 
 data "local_file" "nginx_certbot_config" {
-  filename = "${path.module}/../nginx/certbot.conf"
+  filename = "${path.module}/nginx-config/certbot.conf"
 }

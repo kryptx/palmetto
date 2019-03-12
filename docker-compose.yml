@@ -42,16 +42,3 @@ services:
       - "4001:3000"
     environment:
       - SESSION_SECRET=trench
-  nginx:
-    image: staticfloat/nginx-certbot
-    restart: on-failure
-    depends_on:
-      - pip
-      - client
-    environment:
-      - CERTBOT_EMAIL=jhgaylor@gmail.com
-    ports:
-      - "443:443"
-      - "80:80"
-    volumes:
-      - ./deploy/nginx/:/etc/nginx/conf.d/
