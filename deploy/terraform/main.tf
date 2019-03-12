@@ -3,7 +3,7 @@ resource "digitalocean_droplet" "all_in_one" {
   image     = "docker-18-04"
   name      = "all-in-one-1"
   region    = "${var.region}"
-  size      = "s-2vcpu-2gb"
+  size      = "s-1vcpu-1gb"
   ssh_keys  = ["${digitalocean_ssh_key.jhgaylor.fingerprint}", "${digitalocean_ssh_key.kryptx.fingerprint}"]
   user_data = "${data.template_file.user_data.rendered}"
 
@@ -11,20 +11,6 @@ resource "digitalocean_droplet" "all_in_one" {
   # lifecycle {
   #   ignore_changes = ["user_data"]
   # }
-}
-
-resource "digitalocean_domain" "plmto_com" {
-  name = "plmto.com"
-}
-
-resource "digitalocean_record" "srv" {
-  domain   = "${digitalocean_domain.plmto_com.name}"
-  type     = "SRV"
-  weight   = 65535
-  priority = 65535
-  name     = "_palmetto._tcp"
-  port     = 443
-  value    = "pip1"
 }
 
 resource "digitalocean_floating_ip" "all_in_one" {
@@ -36,32 +22,45 @@ resource "digitalocean_floating_ip_assignment" "all_in_one" {
   droplet_id = "${digitalocean_droplet.all_in_one.id}"
 }
 
-resource "digitalocean_record" "pip1" {
-  domain = "${digitalocean_domain.plmto_com.name}"
-  type   = "A"
-  name   = "pip1"
-  value  = "${digitalocean_floating_ip.all_in_one.ip_address}"
+resource "digitalocean_certificate" "plmto" {
+  name             = "plmto"
+
+  type = "lets_encrypt"
+
+  domains = [
+    "pip.plmto.com",
+    "pip1.plmto.com",
+    "client.plmto.com",
+    "app.plmto.com",
+  ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
-resource "digitalocean_record" "app" {
-  domain = "${digitalocean_domain.plmto_com.name}"
-  type   = "A"
-  name   = "app"
-  value  = "${digitalocean_floating_ip.all_in_one.ip_address}"
-}
+resource "digitalocean_loadbalancer" "all_in_one" {
+  name = "plmto-public"
+  region = "${var.region}"
+  redirect_http_to_https = true
 
-resource "digitalocean_record" "pip" {
-  domain = "${digitalocean_domain.plmto_com.name}"
-  type   = "A"
-  name   = "pip"
-  value  = "${digitalocean_floating_ip.all_in_one.ip_address}"
-}
+  forwarding_rule {
+    entry_port = 443
+    entry_protocol = "https"
 
-resource "digitalocean_record" "client" {
-  domain = "${digitalocean_domain.plmto_com.name}"
-  type   = "A"
-  name   = "client"
-  value  = "${digitalocean_floating_ip.all_in_one.ip_address}"
+    target_port = 80
+    target_protocol = "http"
+
+    certificate_id = "${digitalocean_certificate.plmto.id}"
+  }
+
+  healthcheck {
+    port = 80
+    path = "/healthz"
+    protocol = "http"
+  }
+
+  droplet_ids = ["${digitalocean_droplet.all_in_one.id}"]
 }
 
 resource "digitalocean_firewall" "ssh_http_https" {

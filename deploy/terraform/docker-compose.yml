@@ -2,6 +2,7 @@ version: '3'
 services:
   db:
     image: couchdb
+    restart: on-failure
     ports:
       - "5984:5984"
       - "4369:4369"
@@ -43,15 +44,12 @@ services:
     environment:
       - SESSION_SECRET=trench
   nginx:
-    image: staticfloat/nginx-certbot
+    image: nginx:latest
     restart: on-failure
     links:
       - pip
       - client
-    environment:
-      - CERTBOT_EMAIL=jhgaylor@gmail.com
     ports:
-      - "443:443"
       - "80:80"
     volumes:
-      - /opt/palmetto/nginx-conf/:/etc/nginx/conf.d/
+      - /opt/palmetto/nginx.conf:/etc/nginx/conf.d/default.conf
