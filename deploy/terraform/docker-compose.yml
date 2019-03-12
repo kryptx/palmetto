@@ -1,0 +1,57 @@
+version: '3'
+services:
+  db:
+    image: couchdb
+    ports:
+      - "5984:5984"
+      - "4369:4369"
+      - "9100:9100"
+    environment:
+      - COUCHDB_USER=rob
+      - COUCHDB_PASSWORD=123456
+  db_init:
+    image: kryptx/palmetto-db-init
+    environment:
+      - COUCHDB_USER=rob
+      - COUCHDB_PASSWORD=123456
+      - COUCHDB_DBNAME=users
+      - COUCHDB_HOSTNAME=db
+    links:
+      - db
+  pip:
+    image: kryptx/palmetto-pip
+    restart: on-failure
+    depends_on:
+      - db_init
+    links:
+      - db
+    ports:
+      - "4000:3000"
+    environment:
+      - PGHOST=postgres
+      - DB_HOST=db
+      - SESSION_SECRET=trench
+      # - DB_USER=rob
+      # - DB_PASSWORD=123456
+  client:
+    image: kryptx/palmetto-client
+    restart: on-failure
+    depends_on:
+      - pip
+    ports:
+      - "4001:3000"
+    environment:
+      - SESSION_SECRET=trench
+  nginx:
+    image: staticfloat/nginx-certbot
+    restart: on-failure
+    depends_on:
+      - pip
+      - client
+    environment:
+      - CERTBOT_EMAIL=jhgaylor@gmail.com
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - /opt/palmetto/nginx-conf/:/etc/nginx/conf.d/
