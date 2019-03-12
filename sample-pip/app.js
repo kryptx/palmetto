@@ -16,7 +16,7 @@ const db = Nano(`http://${config.get('db.host')}:${config.get('db.port')}`)
 const cache = new Cache({ stdTTL: 60, checkperiod: 10 });
 
 let app = Express();
-app.use([ BodyParser.json(), BodyParser.urlencoded({ extended: false }) ]);
+app.use([ BodyParser.json(), BodyParser.urlencoded({ extended: true }) ]);
 app.set('view engine', 'pug');
 app.use(Session({
   secret: config.get('session.secret'),

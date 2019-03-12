@@ -15,10 +15,10 @@ html
             strong In addition, you may choose to provide the following optional values:
           ul(class="list-group")
             - for(let i = 0; i < request.length; i++)
-              label(for=`allow.${id}`)
+              label(for=`allow.${request[i]}`)
                 li(class="list-group-item")
-                  input(type='checkbox' name=`allow[${i}]` val=val id=`allow.${val}` checked)
-                  |  #{val}
+                  input(type='checkbox' name=`allow[${i}]` val=val id=`allow.${request[i]}` checked)
+                  |  #{request[i]}
           p(class="text-center")
             input(type="submit", class="btn btn-success", name="result", value="Approve")
             | &nbsp;
