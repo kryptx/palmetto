@@ -53,8 +53,7 @@ resource "digitalocean_record" "client" {
 resource "digitalocean_firewall" "ssh_http_https" {
   name = "only-ssh-http-and-https"
 
-  # droplet_ids = ["${digitalocean_droplet.all_in_one.id}"]
-  droplet_ids = []
+  droplet_ids = ["${digitalocean_droplet.all_in_one.id}"]
 
   inbound_rule = [
     {
@@ -70,6 +69,26 @@ resource "digitalocean_firewall" "ssh_http_https" {
     {
       protocol         = "tcp"
       port_range       = "443"
+      source_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol         = "tcp"
+      port_range       = "4000-4001"
+      source_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol         = "tcp"
+      port_range       = "5984"
+      source_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol         = "tcp"
+      port_range       = "4369"
+      source_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol         = "tcp"
+      port_range       = "9100"
       source_addresses = ["0.0.0.0/0", "::/0"]
     },
     {
