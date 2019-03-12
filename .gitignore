@@ -78,3 +78,8 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+.terraform/
+*.env
+plan
+plan.out
