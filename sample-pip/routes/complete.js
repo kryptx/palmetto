@@ -17,7 +17,7 @@ function getApprovedData(req) {
 }
 
 module.exports = exports = {
-  path: '/palmetto/complete',
+  path: '/complete',
   method: 'post',
   validation: {
     body: Joi.object().keys({
