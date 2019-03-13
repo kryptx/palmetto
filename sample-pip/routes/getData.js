@@ -5,9 +5,12 @@ const Joi = require('joi');
 const { createHash } = require('crypto');
 
 module.exports = exports = {
-  path: '/',
+  path: '/:userId',
   method: 'post',
   validation: {
+    params: Joi.object().keys({
+      userId: Joi.string()
+    }),
     query: Joi.object().keys({
       code: Joi.string().min(1).required(),
       code_challenge_verifier: Joi.string().min(1).required()
@@ -38,6 +41,11 @@ module.exports = exports = {
       return next(unauthorized('Code challenge failed.'));
     }
 
+    if(data.id !== req.session.authRequest.id) {
+      return next(unauthorized('Corrupt session; please try again.'))
+    }
+
+    delete req.session.authRequest;
     cacheDel(req.query.code);
     res.json(data);
   }

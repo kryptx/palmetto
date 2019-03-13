@@ -31,8 +31,6 @@ services:
       - PGHOST=postgres
       - DB_HOST=db
       - SESSION_SECRET=trench
-      # - DB_USER=rob
-      # - DB_PASSWORD=123456
   client:
     build: ./sample-client
     restart: on-failure
@@ -42,3 +40,4 @@ services:
       - "4001:3000"
     environment:
       - SESSION_SECRET=trench
+      - APP_ENV=public
