@@ -39,7 +39,13 @@ module.exports = exports = {
 
     if(req.body.result === 'Approve') {
       const code = await randomBytes(16).toString('base64');
-      cacheSet(code, getApprovedData(req));
+      cacheSet(code, {
+        request: {
+          code_challenge: req.session.authRequest.code_challenge,
+          code_challenge_method: req.session.authRequest.code_challenge_method
+        },
+        payload: getApprovedData(req)
+      });
       callback += '?' + Querystring.stringify({ code });
     }
 
@@ -49,6 +55,8 @@ module.exports = exports = {
       });
     }
 
+    // the only remaining request needed to complete the flow is from another client.
+    delete req.session.authRequest;
     res.set('Location', callback);
     res.status(302).send();
   }

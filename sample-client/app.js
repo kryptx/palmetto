@@ -6,6 +6,8 @@ const Apone = require('apone');
 const Request = require('superagent');
 const routes = require('./routes');
 const config = require('./config');
+const { createLogger } = require('bunyan');
+const log = createLogger({ name: 'palmetto-client' })
 
 let app = Express();
 let apone = new Apone(app);
@@ -16,7 +18,7 @@ app.use(Session({
   saveUninitialized: true
 }));
 
-apone.register(routes, { config, Request });
+apone.register(routes, { config, Request, log });
 
 app.use(function(err, req, res, next) {
   if(!err.isBoom) { return next(err); }
