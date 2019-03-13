@@ -24,6 +24,6 @@ app.use(function(err, req, res, next) {
   if(!err.isBoom) { return next(err); }
   let { statusCode, payload } = err.output;
   res.status(statusCode).json(payload);
-})
+});
 
 app.listen(3000);

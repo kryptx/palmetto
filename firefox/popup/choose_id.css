@@ -1,0 +1,21 @@
+html, body {
+  width: 400px;
+  font-size: 14px;
+}
+
+.hidden {
+  display: none;
+}
+
+.userButtons {
+  text-align: right;
+  float: right;
+}
+
+.newUser {
+  padding: 5px;
+}
+
+.form-row {
+  margin: 5px;
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./choose_id.css" />
+  </head>
+  <body>
+    <ul class="list-group" id="accounts">
+      <li class="list-group-item hidden" id="user_">
+        <strong class="username">no users found</strong>
+        <div class="userButtons">
+          <button type="button" class="btn btn-secondary login">Log In</button>
+          <button type="button" class="btn btn-danger remove">Remove</button></strong>
+        </div>
+      </li>
+    </ul>
+    <div class="form-row">
+        <div class="col-8">
+          <input type="text" class="form-control" placeholder="New identity" id="newId"/>
+        </div>
+
+      <div class="col-4">
+        <button type="button" class="btn btn-primary btn-sm form-control" id="btnAddAccount">Add Identity</button>
+      </div>
+    </form>
+    <div id="error-content" class="hidden">
+      Problem.
+    </div>
+    <script src="./choose_id.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  </body>
+
+</html>

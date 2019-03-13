@@ -5,7 +5,7 @@ module.exports = {
     secret: {
       doc: 'A secret value for session signatures',
       format: String,
-      default: '',
+      default: 'dummy',
       env: 'SESSION_SECRET'
     }
   },

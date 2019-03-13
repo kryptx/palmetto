@@ -25,7 +25,7 @@ module.exports = exports = {
       allow: Joi.array().items(Joi.string().min(1)).optional().default([])
     })
   },
-  handle: svc => async (req, res, next) => {
+  handle: ({ log, cache }) => async (req, res, next) => {
     if(!req.session.user) return next(unauthorized('User not found in session.'));
     if(!req.session.authRequest) return next(unauthorized('Authorization is not currently in progress.'));
     if(!req.body.result) {
@@ -34,7 +34,8 @@ module.exports = exports = {
       return;
     }
 
-    const cacheSet = promisify(svc.cache.set);
+    log.info(`Grant prompt completed with decision '${req.body.result}'.`, { allow: req.body.allow });
+    const cacheSet = promisify(cache.set);
     let callback = req.session.authRequest.callback;
 
     if(req.body.result === 'Approve') {

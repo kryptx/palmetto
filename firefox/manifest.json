@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "Palmetto",
+  "version": "0.1.0",
+
+  "browser_specific_settings":{
+    "gecko": {
+      "id": "{b273b1b4-019e-4659-a87f-005d04c507ec}"
+    }
+  },
+  "description": "Provides the ability to log in using Palmetto API.",
+  "icons": {
+    "32": "icons/logo32.png",
+    "48": "icons/logo48.png"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ],
+  "browser_action": {
+    "default_icon": "icons/logo32.png",
+    "default_title": "Palmetto",
+    "default_popup": "popup/choose_id.html"
+  }
+}
