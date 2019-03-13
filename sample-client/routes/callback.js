@@ -9,8 +9,7 @@ module.exports = exports = {
   method: 'get',
   validation: {
     query: Joi.object().keys({
-      authorization_code: Joi.string().min(1),
-      state: Joi.string().length(64)
+      code: Joi.string().min(1).required(),
     })
   },
   handle: svc => async (req, res, next) => {

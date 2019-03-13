@@ -41,11 +41,5 @@ module.exports = {
       default: 5984,
       env: 'DB_PORT'
     }
-  },
-  base_url: {
-    doc: "The base URL of this implementation",
-    format: String,
-    default: "http://localhost",
-    env: 'BASE_URL'
   }
 }

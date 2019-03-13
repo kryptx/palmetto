@@ -3,6 +3,7 @@
 const Express = require('express');
 const Session = require('express-session');
 const Apone = require('apone');
+const Request = require('superagent');
 const routes = require('./routes');
 const config = require('./config');
 
@@ -15,7 +16,7 @@ app.use(Session({
   saveUninitialized: true
 }));
 
-apone.register(routes, { config });
+apone.register(routes, { config, Request });
 
 app.use(function(err, req, res, next) {
   if(!err.isBoom) { return next(err); }

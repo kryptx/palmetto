@@ -19,7 +19,7 @@ module.exports = exports = {
 
     // todo: also get certificate data from this request
     const client = await svc.Request.get(req.session.authRequest.client).send();
-    req.session.authRequest.callback = client.callback;
+    req.session.authRequest.callback = client.body.callback;
 
     res.render('prompt', req.session.authRequest);
   }
