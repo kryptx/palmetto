@@ -37,6 +37,8 @@ module.exports = exports = {
     }
 
     req.session.user = response.body;
+    req.session.user.id = req.session.auth.palmetto.id;
+
     let nextUrl = req.session.auth.next || '/';
     delete req.session.auth;
     res.set('Location', nextUrl);
