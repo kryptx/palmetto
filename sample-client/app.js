@@ -23,6 +23,7 @@ apone.register(routes, { config, Request, log });
 app.use(function(err, req, res, next) {
   if(!err.isBoom) { return next(err); }
   let { statusCode, payload } = err.output;
+  if(statusCode === 401) { res.set('WWW-Authenticate', 'Palmetto'); }
   res.status(statusCode).json(payload);
 });
 
