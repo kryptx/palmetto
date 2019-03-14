@@ -78,7 +78,9 @@ This serves as an alternative to client pre-registration, and provides an opport
 
 #### Endpoint: Palmetto Callback
 
-This endpoint will receive the authorization code, and is responsible for exchanging it for information from the PIP, and sending the user on to their business. At this step, BEFORE attempting to perform the code exchange, implementations SHOULD validate that the Palmetto ID in the query string matches the one that requested authorization for this session.
+This endpoint will receive the authorization code, and is responsible for exchanging it for information from the PIP, and sending the user on to their business.
+
+Even if no data was requested, this exchange should still be performed to verify the code was legitimately produced by the PIP in question and to validate that the data (particularly the ID) corresponds to the authentication request that initiated the flow.
 
 #### Initiating login
 In the context of Palmetto, a "login request" or "authentication request" is a request to your resource server that contains an `Authorization` header which contains `Palmetto ` followed by a Palmetto ID.
@@ -117,7 +119,7 @@ The PIP must implement one endpoint for each user which will be used to retrieve
 
 Relative to each such endpoint must exist a corresponding `/authorize` endpoint that will ensure the user's presence (via whatever means the PIP implementer wishes) before prompting the user to release the requested IVs to the client.
 
-Once the user authenticates and decides whether to grant access, they are redirected to the callback url in the root document.
+Once the user authenticates and decides whether to grant access, they are redirected to the callback url in the root document, either with an error or an authorization code (`code` query string parameter) which can be exchanged for the required + granted data.
 
 ### User Agent
 
