@@ -22,6 +22,14 @@ module.exports = {
     env: "PORT",
     arg: "port"
   },
+  palmetto: {
+    domain: {
+      doc: "Palmetto domain that points to this PIP",
+      format: String,
+      default: "localhost",
+      env: "PALMETTO_DOMAIN",
+    }
+  },
   db: {
     host: {
       doc: "Database host name/IP",

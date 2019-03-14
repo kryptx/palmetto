@@ -21,7 +21,6 @@ async function allowPalmettoLogin(req, res, next) {
 
     palmetto.url = `https://${pip.name}:${pip.port}${palmetto.path}`;
     const queryString = Querystring.stringify({
-      id: palmetto.id,
       client: `https://app.plmto.com/palmetto`,
       require: 'name.display,address.email',
       request: 'location.country',

@@ -16,7 +16,6 @@ module.exports = exports = {
       userId: Joi.string().min(1).required(),
     }),
     query: Joi.object().keys({
-      id: Joi.string().regex(/[\w-]+(\.[\w-]+)+\/[\w-\.~:/+]+$/i).required(),
       client: Joi.string().uri({ scheme: 'https' }).required(),
       require: joi.stringArray().items(Joi.string()).required(),
       request: joi.stringArray().items(Joi.string()).default([]),
@@ -24,14 +23,14 @@ module.exports = exports = {
       code_challenge_method: Joi.string().only('plain','S256').default('plain')
     })
   },
-  handle: (req, res, next) => {
+  handle: ({ config }) => (req, res, next) => {
     // this request represents a NEW release authorization.
     // since the user may arrive here with or without a session,
     // store the data and send them to the grant prompt
     // even if the user didn't exist, we wouldn't tell them yet
     req.session.authRequest = {
+      id: `${config.get('palmetto.domain')}/${req.params.userId}`,
       userId: req.params.userId,
-      id: req.query.id,
       client: req.query.client,
       require: req.query.require,
       request: req.query.request || [],

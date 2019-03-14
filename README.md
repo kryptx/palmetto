@@ -91,7 +91,6 @@ Services MUST NOT use the Palmetto ID directly as a URL to authorize an authenti
 
 An authorization request is performed by sending a Location header to the User Agent to the HTTPS host and port found in the SRV record, followed by the path, and the additional path component `/authorize`, with the following query parameters:
 
-* `id` - the Palmetto ID that has requested authentication.
 * `client` - an HTTPS URL, owned by the requesting application, that will provide the callback URL.
 * `require` - data that's required to continue, in the form of a comma-delimited list of IV keys. [ Optional ]
 * `request` - an additional comma-delimited list of IVs to request but which are not required. [ Optional ]
