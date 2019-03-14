@@ -27,8 +27,8 @@ Other than limiting flow, grant type, and response contents, some other choices 
   * Helps keep IDs short.
   * Allows the ID to double as a public identity profile URL, if the Identity Provider wishes.
 * Clients do not pre-register (nor do they dynamically register); instead, they publish a callback URL.
-  * Eliminates dealing with secrets and having to pick a grant type. Palmetto is strictly for delegating _user authentication_.
-  * It's worth noting that, while we believe it's small, this is genuinely a limitation of Palmetto compared to OpenID Connect. The Resource Server must be reachable from the Identity Provider's network.
+  * Eliminates secrets, IDs, and grant types.
+  * It's worth noting that, while we believe it's small, it is genuinely a limitation of Palmetto that the Resource Server must be reachable from the Identity Provider's network.
 * Data is returned directly in a response body, unsigned.
   * The signature itself proves a subset of that which is guaranteed by TLS, which is required by Palmetto.
   * Particularly sensitive resource servers may additionally choose to only allow authentication against identity providers presenting OV or EV certificates.
@@ -115,11 +115,11 @@ The PIP verifies that the hashes match and returns the body of the user with req
 
 A Personal Identity Provider is a service which includes at least one pair of endpoints dedicated to an individual user which enable client applications to retrieve information about that user.
 
-The PIP must implement one endpoint for each user which will be used to retrieve data (via POST) when a valid authorization code is provided. The user's **Palmetto ID** is formed by appending the path for this endpoint to the `name` of the SRV record (without the trailing dot), for instance `plmto.com/kryptx`.
+The PIP must implement one endpoint for each user which will be used to retrieve data (via POST) when a valid authorization code is provided (described in "completing login" above). The user's **Palmetto ID** is formed by appending the path for this endpoint to the `name` of the SRV record (without the trailing dot), for instance `plmto.com/kryptx`.
 
-Relative to each such endpoint must exist a corresponding `/authorize` endpoint that will ensure the user's presence (via whatever means the PIP implementer wishes) before prompting the user to release the requested IVs to the client.
+Relative to each such endpoint must exist a corresponding `/authorize` endpoint that will receive the query parameters listed under 'Initiating login' above and then verify the user's presence (by whatever means the PIP implementer wishes) before prompting the user to release the requested IVs to the client.
 
-Once the user authenticates and decides whether to grant access, they are redirected to the callback url in the root document, either with an error or an authorization code (`code` query string parameter) which can be exchanged for the required + granted data.
+Once the user authenticates and decides whether to grant access, they are redirected to the callback url in the root document, either with an error (details yet to be determined), or an authorization code (`code` query string parameter) which can be exchanged for the required + granted data.
 
 ### User Agent
 
