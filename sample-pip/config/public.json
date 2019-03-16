@@ -1,4 +1,5 @@
 {
+  "port": 3000,
   "palmetto": {
     "domain": "plmto.com"
   }

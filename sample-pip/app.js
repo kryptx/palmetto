@@ -44,5 +44,5 @@ app.use(function(err, req, res, next) {
   res.status(statusCode).json(payload);
 });
 
-
-app.listen(3000);
+app.listen(config.get('port'));
+log.info('Listening on port ' + config.get('port'));

@@ -5,7 +5,7 @@ module.exports = {
     secret: {
       doc: 'A secret value for session signatures',
       format: String,
-      default: 'dummy',
+      default: 'dummy-pip',
       env: 'SESSION_SECRET'
     }
   },
@@ -24,15 +24,15 @@ module.exports = {
   },
   palmetto: {
     domain: {
-      doc: "Palmetto domain that points to this PIP",
+      doc: "Palmetto domain that would resolve (via SRV) to this PIP",
       format: String,
-      default: "localhost",
+      default: "plmto.local",
       env: "PALMETTO_DOMAIN",
     }
   },
   db: {
     host: {
-      doc: "Database host name/IP",
+      doc: "CouchDB host name/IP",
       format: '*',
       default: 'localhost',
       env: 'DB_HOST'
@@ -44,7 +44,7 @@ module.exports = {
       env: 'DB_DB'
     },
     port: {
-      doc: "Database name",
+      doc: "Database port",
       format: "port",
       default: 5984,
       env: 'DB_PORT'

@@ -1,1 +1,3 @@
-{}
+{
+  "overrides": { "palmetto_enabled": true }
+}

@@ -16,7 +16,7 @@ module.exports = exports = {
       userId: Joi.string().min(1).required(),
     }),
     query: Joi.object().keys({
-      client: Joi.string().uri({ scheme: 'https' }).required(),
+      client: Joi.string().uri().required(), // todo: production should require https
       require: joi.stringArray().items(Joi.string()).default([]),
       request: joi.stringArray().items(Joi.string()).default([]),
       code_challenge: Joi.string().min(1).required(),
