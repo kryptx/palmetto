@@ -17,7 +17,7 @@ html
             - for(let i = 0; i < request.length; i++)
               label(for=`allow.${request[i]}`)
                 li(class="list-group-item")
-                  input(type='checkbox' name=`allow[${i}]` val=val id=`allow.${request[i]}` checked)
+                  input(type='checkbox' name=`allow[]` value=request[i] id=`allow.${request[i]}` checked)
                   |  #{request[i]}
           p(class="text-center")
             input(type="submit", class="btn btn-success", name="result", value="Approve")
