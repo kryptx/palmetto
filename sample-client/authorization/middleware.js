@@ -47,7 +47,6 @@ const allowPalmettoLogin = ({ config }) => async function checkUserAuthState(req
   });
 
   req.session.auth = { palmetto, next: req.originalUrl };
-  req.session.save(); // why?
   res.set('Location', `${palmetto.url}/authorize?${queryString}`);
   res.status(302).send();
 
