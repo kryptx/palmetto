@@ -35,28 +35,27 @@ module.exports = exports = {
     }
 
     log.info(`Grant prompt completed with decision '${req.body.result}'.`, { allow: req.body.allow });
-    const cacheSet = promisify(cache.set);
     let callback = req.session.authRequest.callback;
 
     if(req.body.result === 'Approve') {
-      const code = await randomBytes(16).toString('base64');
-      cacheSet(code, {
-        request: {
-          code_challenge: req.session.authRequest.code_challenge,
-          code_challenge_method: req.session.authRequest.code_challenge_method
-        },
-        payload: getApprovedData(req)
-      });
+      let cacheBody = { payload: getApprovedData(req) };
+
+      if(req.session.authRequest.code_challenge) {
+        cacheBody.code_challenge = req.session.authRequest.code_challenge;
+        cacheBody.code_challenge_method = req.session.authRequest.code_challenge_method;
+      }
+
+      const cacheSet = promisify(cache.set);
+      const code = await randomBytes(16).toString('base64')
+      await cacheSet(code, cacheBody);
       callback += '?' + Querystring.stringify({ code });
     }
 
     if(req.body.result === 'Reject') {
-      callback += '?' + Querystring.stringify({
-        error: 'access_denied'
-      });
+      callback += '?' + Querystring.stringify({ error: 'access_denied' });
     }
 
-    // the only remaining request needed to complete the flow is from another client.
+    // the only request needed to complete the flow will come from another client.
     delete req.session.authRequest;
     res.set('Location', callback);
     res.status(302).send();

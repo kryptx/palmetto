@@ -27,7 +27,7 @@ module.exports = exports = {
 
     let ccvHash;
     const rawCcv = Buffer.from(req.body.code_challenge_verifier, 'base64');
-    switch(data.request.code_challenge_method) {
+    switch(data.code_challenge_method) {
       case 'S256':
         const hash = createHash('sha256');
         hash.update(rawCcv);
@@ -38,11 +38,11 @@ module.exports = exports = {
         break;
       default:
         // there was no code challenge (this is probably undefined)
-        ccvHash = data.request.code_challenge;
+        ccvHash = data.code_challenge;
         break;
     }
 
-    if(data.request.code_challenge !== ccvHash) {
+    if(data.code_challenge !== ccvHash) {
       return next(unauthorized('Code challenge failed.'));
     }
 
