@@ -2,6 +2,14 @@
 > It is not that we have so little time but that we lose so much. … The life we receive is not short but we make it so; we are not ill provided but use what we have wastefully.
 
 *Seneca the Younger, De Brevitate Vitæ [ On the shortness of life ]*
+
+* [Introduction and Discussion](#introduction-and-discussion)
+* [Definitions](#definitions)
+* [Components](#components)
+* [Authorization Flow](#authorization-flow)
+* [API Documentation](#api-documentation)
+* [Standard Identity Values](#standard-identity-values)
+
 ## Introduction and Discussion
 Palmetto is a delegated authentication standard being created for use in applications.
 
@@ -120,7 +128,7 @@ A Personal Identity Provider is a service which includes at least one pair of en
 
 The PIP must implement one endpoint for each user which will be used to retrieve data (via POST) when a valid authorization code is provided (described in "completing login" above). The user's **Palmetto ID** is formed by appending the path for this endpoint to the `name` of the SRV record (without the trailing dot), for instance `plmto.com/kryptx`.
 
-| If this domain... | Resolved via SRV to this | Then this ID | Would refer to this URL |
+| If this domain... | Resolved via SRV to... | Then this ID: | Would refer to this URL: |
 |-------------------|--------------------------|--------------|--------------------|
 | hamburgers.com | palmetto.hamburgers.com:1018 | hamburgers.com/ronald | https://palmetto.hamburgers.com:1018/ronald |
 | amazon.com | secret-palmetto.google.com:4433 | amazon.com/bezos | https://secret-palmetto.google.com:4433/bezos |
@@ -139,6 +147,10 @@ Alongside the prompt for the user to authorize the release of requested IVs, the
 ## Authorization Flow
 
 https://www.lucidchart.com/invitations/accept/5421b962-ddba-42f8-83c1-356896dc3d74
+
+## API Documentation
+
+https://documenter.getpostman.com/view/386021/S17nUqhX
 
 ## Standard Identity Values
 
