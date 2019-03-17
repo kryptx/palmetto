@@ -8,6 +8,9 @@ const joi = Joi.extend((original) => ({
   coerce: (value, _, __) => (typeof(value) === 'string' ? value.split(',') : value)
 }));
 
+// client must present an HTTPS palmetto root. Outside of prod, http is ok. Nothing else.
+const allowedClientSchemes = (process.env.NODE_ENV === 'production') ? [ 'https' ] : [ 'http', 'https' ];
+
 module.exports = exports = {
   path: '/:userId/authorize',
   method: 'get',
@@ -16,18 +19,17 @@ module.exports = exports = {
       userId: Joi.string().min(1).required(),
     }),
     query: Joi.object().keys({
-      client: Joi.string().uri().required(), // todo: production should require https
+      client: Joi.string().uri({ scheme: allowedClientSchemes }).required(),
       require: joi.stringArray().items(Joi.string()).default([]),
       request: joi.stringArray().items(Joi.string()).default([]),
-      code_challenge: Joi.string().min(1),
+      code_challenge: Joi.string().base64(),
       code_challenge_method: Joi.string().only('plain','S256').default('plain')
-        .when('code_challenge', { is: Joi.exist(), then: Joi.required() })
     })
   },
   handle: ({ config }) => (req, res, next) => {
-    // this request represents a NEW release authorization.
+    // this request represents a NEW authorization.
     // since the user may arrive here with or without a session,
-    // store the data and send them to the grant prompt
+    // store the data and send them to the grant prompt (which itself will ensure login)
     // even if the user didn't exist, we wouldn't tell them yet
     req.session.authRequest = {
       // the choice for a transparent "userId" to be part of the URL is arbitrary.
@@ -39,6 +41,7 @@ module.exports = exports = {
       request: req.query.request
     };
 
+    // this must be supported by the PIP, but clients are not required to send it
     if(req.query.code_challenge) {
       req.session.authRequest.code_challenge = req.query.code_challenge;
       req.session.authRequest.code_challenge_method = req.query.code_challenge_method;
