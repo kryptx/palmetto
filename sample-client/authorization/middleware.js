@@ -1,6 +1,5 @@
 'use strict';
 
-// const { createHash, randomBytes } = require('crypto');
 const { parseHeader, getPalmettoUrl } = require('../palmetto');
 const { unauthorized } = require('boom');
 const Querystring = require('querystring');
@@ -18,6 +17,7 @@ const allowPalmettoLogin = ({ config }) => async function checkUserAuthState(req
   });
 
   // PKCE example
+  // const { createHash, randomBytes } = require('crypto');
   // const ccv = await randomBytes(32);
   // const ccvHash = createHash('sha256');
   // ccvHash.update(ccv);
@@ -30,7 +30,7 @@ const allowPalmettoLogin = ({ config }) => async function checkUserAuthState(req
   res.status(302).send();
 }
 
-// this is not strictly a palmetto function
+// this is not strictly a palmetto function, just something an app might do
 function ensureLoggedIn(req, res, next) {
   if(!req.session.user) {
     return next(unauthorized('You must be logged in to view this page. Please use Palmetto to log in.'))
