@@ -8,7 +8,7 @@ const allowPalmettoLogin = ({ config }) => async function checkUserAuthState(req
   const palmetto = parseHeader(req.headers.authorization);
   if(!palmetto) return next();
 
-  palmetto.url = await getPalmettoUrl(palmetto.domain, { overrides: config.get('overrides') });
+  palmetto.url = await getPalmettoUrl(palmetto, { overrides: config.get('overrides') });
 
   const queryString = Querystring.stringify({
     client: `${config.get('base_url')}/palmetto`,

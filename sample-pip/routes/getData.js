@@ -26,9 +26,9 @@ module.exports = exports = {
     }
 
     let ccvHash;
-    const rawCcv = Buffer.from(req.body.code_challenge_verifier, 'base64');
     switch(data.code_challenge_method) {
       case 'S256':
+        const rawCcv = Buffer.from(req.body.code_challenge_verifier, 'base64');
         const hash = createHash('sha256');
         hash.update(rawCcv);
         ccvHash = hash.digest('base64');

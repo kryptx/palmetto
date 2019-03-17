@@ -14,26 +14,25 @@ module.exports = {
       path: headerParts[4]
     };
   },
-  getPalmettoUrl: async (name, { overrides }) => {
+  getPalmettoUrl: async ({ domain, path }, { overrides }) => {
     let scheme = 'https';
-    if(process.env.NODE_ENV !== 'production' && overrides.palmetto_enabled && name == overrides.palmetto_target) {
-      srvResult = [
-        {
-          name: overrides.palmetto_name,
-          port: overrides.palmetto_port,
-          priority: 100,
-          weight: 100
-        }
-      ]
+    let srvResult;
+    if(process.env.NODE_ENV !== 'production' && overrides.palmetto_enabled && domain == overrides.palmetto_target) {
+      srvResult = [{
+        name: overrides.palmetto_name,
+        port: overrides.palmetto_port,
+        priority: 100,
+        weight: 100
+      }];
 
       if(overrides.palmetto_http === true) {
         scheme = 'http';
       }
     } else {
-      srvResult = await resolveSrv(`_palmetto._tcp.${name}`);
+      srvResult = await resolveSrv(`_palmetto._tcp.${domain}`);
     }
 
     const pip = srvResult[0]; // todo: use priority and weight; retry
-    return `${scheme}://${pip.name}:${pip.port}${palmetto.path}`;
+    return `${scheme}://${pip.name}:${pip.port}${path}`;
   }
 }
