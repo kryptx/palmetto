@@ -23,6 +23,7 @@ Palmetto is a standard under development which essentially extracts the concept 
 Other than limiting flow, grant type, and response contents, some other choices have been made:
 * The flow begins with an assertion to the resource server about the user's identity, including the custodian of the associated data.
   * Allows the resource server to know what users are trying to authenticate into it, even if they don't succeed.
+  * Servers can still request authentication using the `WWW-Authenticate` header.
 * Servers are named by SRV records, so an ID is interpreted and resolved in a similar way to an e-mail address.
   * Helps keep IDs short.
   * Allows the ID to double as a public identity profile URL, if the Identity Provider wishes.
@@ -33,6 +34,7 @@ Other than limiting flow, grant type, and response contents, some other choices 
   * The signature itself proves a subset of that which is guaranteed by TLS, which is required by Palmetto.
   * Particularly sensitive resource servers may additionally choose to only allow authentication against identity providers presenting OV or EV certificates.
 * All data values are handled individually; Identity Providers are expected to manage presentation to ensure users aren't visually overwhelmed.
+* All PIPs must enforce PKCE if presented but honor the authorization request even if it's not. Clients need only use it if the authorization code could be intercepted (most likely, in a mobile app).
 
 As with OpenID Connect, the user's authorization endpoint serves as a unique identifier of the person on the internet. It offers a standard interface to not only _authorize_ release of their data via some proprietary API, but also to _actually release it_ in a standardized envelope.
 
@@ -40,8 +42,8 @@ Compared to OpenID Connect, however, Palmetto is simple to understand and implem
 
 Crucially, implementations of Identity Providers may choose to authenticate their users any way they wish, including using OpenID Connect or OAuth to delegate to another authority. Palmetto is solely intended to improve two things:
 
-* The burden on the developer of an application that requires login, and
-* The actual user interface required to actually "sign up" or "login".
+* The difficulty of building a secure login system, and
+* The user interface required to actually "sign up" or "login".
 
 ## Definitions
 
@@ -57,10 +59,10 @@ The protocol is omitted because:
 A string of data provided by a user to a PIP, such as a name or e-mail address. There are standard IVs and you may create any additional IVs that you wish. It is expected that custom IVs be prefixed with a namespace that will guarantee they will remain unique.
 
 ### Palmetto Authentication Request
-A request to a Resource Server including a Palmetto ID, signaling that the user wants to provide identifying information. In this document, may be referred to as an "authentication request".
+A request to a Resource Server including an Authorization header that contains `Palmetto` followed by a Palmetto ID, signaling that the user wants to provide identifying information. In this document, may be referred to as an "authentication request".
 
 ### Palmetto Authorization Request
-A request to a PIP to prompt the user to authorize the release of data, likely for the purpose of authentication. In this document, may be referred to as an "authorization request".
+A request from the User Agent to the user's dedicated `/authorize` endpoint which will prompt the user to authorize the release of data, or if no data is requested, to simply authenticate. In this document, may be referred to as an "authorization request".
 
 ## Components
 
@@ -92,15 +94,17 @@ Services MUST NOT use the Palmetto ID directly as a URL to authorize an authenti
 An authorization request is performed by sending a Location header to the User Agent to the HTTPS host and port found in the SRV record, followed by the path, and the additional path component `/authorize`, with the following query parameters:
 
 * `client` - an HTTPS URL, owned by the requesting application, that will provide the callback URL.
-* `require` - data that's required to continue, in the form of a comma-delimited list of IV keys. [ Optional ]
-* `request` - an additional comma-delimited list of IVs to request but which are not required. [ Optional ]
-* `code_challenge` - a Base64-encoded hash of a random value that has been stored by the resource server.
-* `code_challenge_method` - the algorithm that was used to produce the hash. Should use the types specified by the IANA's PKCE Code Challenge Methods
+* `require` - data that's required to continue, in the form of a comma-delimited list of IV keys. [ Optional, defaults to none required ]
+* `request` - an additional comma-delimited list of IVs to request. [ Optional, defaults to no request ]
+* `code_challenge` - a Base64-encoded hash of a random value that has been stored by the resource server. [ Optional, defaults to no challenge ]
+* `code_challenge_method` - the algorithm that was used to produce the hash. Should use the types specified by the IANA's PKCE Code Challenge Methods [ Optional, defaults to `plain` ]
 
-For instance, if `_palmetto._tcp.plmto.com` resolves at highest priority to `login.palmetto-id.com:443` then an application receiving a Palmetto ID of `plmto.com/kryptx` should send a 302 Found response with the Location header set to a URL beginning with `https://login.palmetto-id.com:443/kryptx/authorize?id=plmto.com/kryptx&client=...`.
+For instance, if `_palmetto._tcp.plmto.com` resolves at highest priority to `login.palmetto-id.com:443` then an application receiving a Palmetto ID of `plmto.com/kryptx` should send a 302 Found response with the Location header set to a URL beginning with `https://login.palmetto-id.com:443/kryptx/authorize?client=...`.
+
+As you can see, the only required property is `client`. A Palmetto Authorization request containing only a `client` query parameter indicates that the client wishes only to verify that the presented Palmetto ID belongs to the end-user, presumably because it already has stored the data that it needs and wants only to know that they are in control of the user agent.
 
 #### Completing login
-After the user has granted access to the required IVs to the satisfaction of the PIP, they will be redirected (with a `code` in the query string) to the callback specified in the Palmetto Root. The Resource Server sends an HTTPS POST to the base URL generated by the Palmetto ID (in the above example, to `https://login.palmetto-id.com:443/kryptx) with the following values in the request body:
+After the user has granted access to any required IVs to the satisfaction of the PIP, they will be redirected (with a `code` in the query string) to the callback specified in the Palmetto Root. The Resource Server sends an HTTPS POST to the base URL generated by the Palmetto ID (in the above example, to `https://login.palmetto-id.com:443/kryptx) with the following values in the request body:
 
 * `code` - The authorization code presented by the end user.
 * `code_challenge_verifier` - the random value that was previously hashed to form `code_challenge`.
