@@ -11,7 +11,7 @@ module.exports = {
   },
   overrides: {
     palmetto_enabled: {
-      doc: 'Whether to override a SRV record name',
+      doc: 'Whether to override a SRV record name in non-production environment',
       format: Boolean,
       default: false,
       env: 'OVERRIDES_PALMETTO_ENABLED'
@@ -37,7 +37,7 @@ module.exports = {
     palmetto_http: {
       doc: 'Use http to connect to PIP (for development)',
       format: Boolean,
-      default: false,
+      default: true,
       env: 'OVERRIDES_PALMETTO_HTTP'
     }
   },

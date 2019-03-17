@@ -14,7 +14,7 @@ module.exports = exports = {
     }),
     body: Joi.object().keys({
       code: Joi.string().min(1).required(),
-      code_challenge_verifier: Joi.string().min(1).required()
+      code_challenge_verifier: Joi.string().min(1)
     })
   },
   handle: svc => async (req, res, next) => {
@@ -33,9 +33,12 @@ module.exports = exports = {
         hash.update(rawCcv);
         ccvHash = hash.digest('base64');
         break;
-      default:
       case 'plain':
         ccvHash = req.body.code_challenge_verifier;
+        break;
+      default:
+        // there was no code challenge (this is probably undefined)
+        ccvHash = data.request.code_challenge;
         break;
     }
 

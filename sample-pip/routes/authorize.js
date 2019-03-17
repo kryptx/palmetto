@@ -19,8 +19,9 @@ module.exports = exports = {
       client: Joi.string().uri().required(), // todo: production should require https
       require: joi.stringArray().items(Joi.string()).default([]),
       request: joi.stringArray().items(Joi.string()).default([]),
-      code_challenge: Joi.string().min(1).required(),
+      code_challenge: Joi.string().min(1),
       code_challenge_method: Joi.string().only('plain','S256').default('plain')
+        .when('code_challenge', { is: Joi.exist(), then: Joi.required() })
     })
   },
   handle: ({ config }) => (req, res, next) => {
@@ -35,10 +36,13 @@ module.exports = exports = {
       userId: req.params.userId,
       client: req.query.client,
       require: req.query.require,
-      request: req.query.request,
-      code_challenge: req.query.code_challenge,
-      code_challenge_method: req.query.code_challenge_method
+      request: req.query.request
     };
+
+    if(req.query.code_challenge) {
+      req.session.authRequest.code_challenge = req.query.code_challenge;
+      req.session.authRequest.code_challenge_method = req.query.code_challenge_method;
+    }
 
     res.set('Location', '/grantPrompt');
     res.status(302).send();
