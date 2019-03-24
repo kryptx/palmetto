@@ -11,7 +11,7 @@
 * [Standard Identity Values](#standard-identity-values)
 
 ## Introduction and Discussion
-Palmetto is a delegated authentication standard being created for use in applications.
+Palmetto is an experimental delegated authentication standard being created for use in applications.
 
 ### Problem Statement
 
@@ -22,11 +22,11 @@ While this was convenient, there were a few problems.
 2. For applications that only want information, the requirement to receive a token and then use it to request the data is onerous, and developers of such applications are likely more confused by this "fourth leg" than by OAuth itself.
 3. Creating an account still requires either already being a user of one of their supported OAuth providers (there is no truly generic "OAuth Login"), or entering and remembering a password, which are often undesirable options.
 
-Even more recently, the OpenID Connect (OIDC) standard has been published, which builds further on top of OAuth2 to address some of the above issues, along with Dynamic Client Registration which, theoretically, fully democratizes identity. Despite the efforts of multiple organizations to simplify use of the standard, the unfortunate reality is that because of the burden of understanding and implementing such a large standard, some significant portion of developers elect not to implement this interoperable form of delegated authentication and instead opt for re-implementing probably-insecure password schemes or a limited selection of identity providers.
+Even more recently, the OpenID Connect (OIDC) standard was published, which built further on top of OAuth2 to address some of the above issues along with Dynamic Client Registration which, theoretically, fully democratizes identity. Despite the efforts of multiple organizations to simplify use of the standard, the unfortunate reality is that because of the burden of understanding and implementing such a large standard, some significant portion of developers elect not to implement this interoperable form of delegated authentication and instead opt for re-implementing probably-insecure password schemes or a limited selection of identity providers.
 
 ### Introducing Palmetto
 
-Palmetto is a standard under development which essentially extracts the concept of **an OpenID Connect authorization_code grant type with optional PKCE for `openid` scopes and `response_type: id_token`** into a single opinionated flow, offering direct, secure access to a user's identifying information no matter where they choose to store it.
+Palmetto is an experimental standard which essentially extracts the concept of **an OpenID Connect authorization_code grant type with optional PKCE for `openid` scopes and `response_type: id_token`** into a single opinionated flow, offering direct, secure access to a user's identifying information no matter where they choose to store it.
 
 Other than limiting flow, grant type, and response contents, some other choices have been made:
 * The flow begins with an assertion to the resource server about the user's identity, including the custodian of the associated data.
@@ -183,6 +183,62 @@ Other names appear to be redundant. For instance, there are not only primary and
 | `location.territory` | Territory |
 | `location.postal_code` | Postal Code |
 | `location.tz` | Time Zone (IANA Format) |
+
+## Extension IVs
+Apps can request (and users can provide) any information at all. To request a property not listed by the standard, follow the steps below.
+
+### 1. Pick a key name
+Your name should be something like `noun.qualifier[:qualifier[:qualifier[...]]]` where each `qualifier` is roughly an adjective describing the value more precisely. Some examples might be:
+
+`address.bitcoin` - Bitcoin address
+`username.twitter` - Twitter username
+`name.company` - Company Name
+`key.rsa` or `key.rsa:public` - An RSA Public Key
+`address.street:company` - Company Street Address
+`address.email:company` - Company e-mail
+`address.email:work` - Work e-mail
+
+The PIP can (and probably should) provide the ability to "link" any key such that it always represents the value stored in another key, and they all change together. For example, a person might have the same "work" and "personal" e-mail; in such a case, it should be possible to specify that `address.email.work` points to the value contained in `address.email`.
+
+### 2. Expose the key in your Palmetto root
+
+In addition to your callback URL, include extension IVs in the `custom` property at the root of the document:
+```JSON
+{
+  "callback": "https://some-url/palmetto/callback",
+  "custom": {
+    "address.bitcoin": {
+      "description": "Bitcoin Address"
+    }
+  }
+}
+```
+
+The PIP, upon reading these properties, should include them in the grant prompt. Any non-whitespace value will be accepted, unless you also provide validation rules as described in the next section.
+
+## Client-defined Validation
+PIPs can validate the values that you have requested, according to a per-key [JSON-schema](https://json-schema.org/) you provide. The PIP should prompt users to modify any values which do not match the schema. Whether to persist the modifications is left up to the implementation; preferably the user can choose.
+```JSON
+{
+  "callback": "https://some-url/palmetto/callback",
+  "custom": {
+    "address.bitcoin": {
+      "description": "Bitcoin Address"
+    }
+  },
+  "validation": {
+    "name.display": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 32
+    },
+    "address.bitcoin": {
+      "type": "string",
+      "pattern": "^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$"
+    }
+  }
+}
+```
 
 ## Problems?
 
