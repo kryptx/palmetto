@@ -122,9 +122,11 @@ After the user has granted access to any required IVs to the satisfaction of the
 
 The PIP verifies that the hashes match and returns the body of the user with requested data. The body will have `id` at the root, containing a `palmetto` property containing the palmetto ID that the code provides access to. Other properties are nested at the appropriate location, using dot-syntax (and therefore values are always nested two levels). The Resource server should verify that the ID matches the original authentication request, and that all required IVs are present.
 
+* If there was no `code` but rather an `error`, check the error value:
+   * `access_denied`: The user refused to provide the required information.
+   * `invalid_request`: Something was wrong with the request.
 * If the ID does not match, the user may have been tricked into authorizing against an attacker's account. Reject the request.
 * If IVs are missing, it most likely means they are using a non-conforming PIP. You are encouraged to reject the login with a message about what is missing.
-* If there is an error, the user probably refused to provide the required information.
 * If none of the above is true, the data may be treated as belonging to that Palmetto ID.
 
 ### Personal Identity Provider (PIP)

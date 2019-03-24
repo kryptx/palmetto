@@ -1,18 +1,11 @@
 'use strict';
 
-const GetData = require('./getData');
-const Authorize = require('./authorize');
-const Complete = require('./complete');
-const Whoami = require('./whoami');
-const { getLogin, postLogin } = require('./login');
-const GrantPrompt = require('./grantPrompt')
+const PalmettoRoutes = require('./palmetto');
+const LoginRoutes = require('./login');
+const UserRoutes = require('./user');
 
 module.exports = [
-  Authorize,
-  Complete,
-  GetData,
-  GrantPrompt,
-  getLogin,
-  postLogin,
-  Whoami,
+  ...PalmettoRoutes,
+  ...LoginRoutes,
+  ...UserRoutes,
 ];
