@@ -9,7 +9,8 @@
 * [Authorization Flow](#authorization-flow)
 * [API Documentation](#api-documentation)
 * [Standard Identity Values](#standard-identity-values)
-
+* [Extension Identity Values](#extension-ivs)
+* [Client-defined validation](#client-defined-validation)
 ## Introduction and Discussion
 Palmetto is an experimental delegated authentication standard being created for use in applications.
 
@@ -190,15 +191,15 @@ Apps can request (and users can provide) any information at all. To request a pr
 ### 1. Pick a key name
 Your name should be something like `noun.qualifier[:qualifier[:qualifier[...]]]` where each `qualifier` is roughly an adjective describing the value more precisely. Some examples might be:
 
-`address.bitcoin` - Bitcoin address
-`username.twitter` - Twitter username
-`name.company` - Company Name
-`key.rsa` or `key.rsa:public` - An RSA Public Key
-`address.street:company` - Company Street Address
-`address.email:company` - Company e-mail
-`address.email:work` - Work e-mail
+- `address.bitcoin` - Bitcoin address
+- `username.twitter` - Twitter username
+- `name.company` - Company Name
+- `key.rsa` or `key.rsa:public` - An RSA Public Key
+- `address.street:company` - Company Street Address
+- `address.email:company` - Company e-mail
+- `address.email:work` - Work e-mail
 
-The PIP can (and probably should) provide the ability to "link" any key such that it always represents the value stored in another key, and they all change together. For example, a person might have the same "work" and "personal" e-mail; in such a case, it should be possible to specify that `address.email.work` points to the value contained in `address.email`.
+The PIP can (and probably should) provide the ability to "link" any key such that it always represents the value stored in another key, and they all change together. For example, a person might have the same "work" and "personal" e-mail; in such a case, it should be possible to specify that `address.email:work` points to the value contained in `address.email`.
 
 ### 2. Expose the key in your Palmetto root
 
