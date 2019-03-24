@@ -1,4 +1,5 @@
 {
   "port": 3000,
-  "base_url": "https://app.plmto.com"
+  "base_url": "https://app.plmto.com",
+  "log_level": "info"
 }
