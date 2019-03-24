@@ -3,7 +3,6 @@
 const { badRequest } = require('boom');
 const Joi = require('joi');
 const JsonSchema = require('../../lib/jsonSchema');
-const Querystring = require('querystring');
 const get = require('lodash.get');
 const { standardKeys } = require('../../lib/palmetto')
 
@@ -48,18 +47,10 @@ module.exports = exports = {
       // todo: also get certificate data from this host
       clientResponse = await Request.get(req.session.authRequest.client).send();
       client = await validateRootResponse(clientResponse.body);
+      req.session.authRequest.callback = client.callback;
     } catch (err) {
       log.warn(`Grant prompt cannot be rendered due to an error.`, { err });
-      let callback = req.session.authRequest.callback;
-      callback += '?' + Querystring.stringify({
-        error: 'server_error',
-        error_description: clientResponse ? messages.FAILED_TO_VALIDATE : messages.FAILED_TO_RETRIEVE
-      });
-
-      delete req.session.authRequest;
-      res.set('Location', callback);
-      res.status(302).send();
-      return;
+      return next(unauthorized(clientResponse ? messages.FAILED_TO_VALIDATE : messages.FAILED_TO_RETRIEVE));
     }
 
     let templateContext = Object.assign({},
