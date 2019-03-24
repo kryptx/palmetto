@@ -4,21 +4,32 @@ html
   body
 
     div(class="container")
-      div(class="panel card-container")
+      div(class="card grant-prompt")
         form(action="/complete", method="post")
-          p
-            strong The site at #{client} requires access to the following information:
+          p The site at&nbsp;
+            span(id="hostname")= client
+            |  requires access to the following information:
           ul(class="list-group")
+            li(class="list-group-item palmettoId")
+              span(class="iv_key") palmetto.id
+              span(class="iv_value")= user.palmetto.id
+              span(class="iv_description") Your Palmetto ID
             each val in require
-              li(class="list-group-item")= val
+              li(class="list-group-item")
+                span(class="iv_key")= val
+                span(class="iv_description")= lodashGet(keys, val).description
+                span(class="iv_value")= lodashGet(user.palmetto, val)
           p
             strong In addition, you may choose to provide the following optional values:
           ul(class="list-group")
-          - for(let i = 0; i < request.length; i++)
-            label(for=`allow.${request[i]}`)
-              li(class="list-group-item")
-                input(type='checkbox' name=`allow[]` value=request[i] id=`allow.${request[i]}` checked)
-                |  #{request[i]}
+            each val in request
+              label(for=`allow.${val}`)
+                li(class="list-group-item")
+                  input(type='checkbox' name=`allow[]` value=val id=`allow.${val}` checked)
+                  | &nbsp;
+                  span(class="iv_key")= val
+                  span(class="iv_description")= lodashGet(keys, val).description
+                  span(class="iv_value")= lodashGet(user.palmetto, val)
           p(class="text-center")
             input(type="submit", class="btn btn-success", name="result", value="Approve")
             | &nbsp;

@@ -3,6 +3,9 @@
 const { badRequest } = require('boom');
 const Joi = require('joi');
 const JsonSchema = require('../../lib/jsonSchema');
+const Querystring = require('querystring');
+const get = require('lodash.get');
+const { standardKeys } = require('../../lib/palmetto')
 
 const messages = {
   FAILED_TO_VALIDATE: 'Failed to validate palmetto root response body',
@@ -19,26 +22,23 @@ const rootResponseSchema = Joi.object().keys({
   validation: Joi.object().pattern(/\w\.[\w:]+/, Joi.object()) // where Joi.object() is a json schema
 });
 
+const validateRootResponse = async body => {
+  const result = await rootResponseSchema.validate(body);
+  result.validators = {};
+  if(result.custom) {
+    const customKeys = Object.keys(result.custom);
+    for(let key of customKeys) {
+      result.validators[key] = JsonSchema.compile(result.custom[key]);
+    }
+  }
+  return result;
+};
+
 module.exports = exports = {
   path: '/grantPrompt',
   method: 'get',
   ensureLoggedIn: true,
-  validation: {
-    body: {
-      validate: async body => {
-        const result = await rootResponseSchema.validate(body);
-        result.validators = {};
-        if(result.custom) {
-          const customKeys = Object.keys(result.custom);
-          for(let key of customKeys) {
-            results.validators[key] = JsonSchema.compile(result.custom[key]);
-          }
-        }
-        return result;
-      }
-    }
-  },
-  handle: svc => async (req, res, next) => {
+  handle: ({ log, Request }) => async (req, res, next) => {
     if(!req.session.authRequest || req.session.user.palmetto.id !== req.session.authRequest.id) {
       return next(badRequest('No authorization in progress.'));
     }
@@ -46,8 +46,8 @@ module.exports = exports = {
     let clientResponse, client;
     try {
       // todo: also get certificate data from this host
-      clientResponse = await svc.Request.get(req.session.authRequest.client).send();
-      client = await validate(clientResponse.body);
+      clientResponse = await Request.get(req.session.authRequest.client).send();
+      client = await validateRootResponse(clientResponse.body);
     } catch (err) {
       log.warn(`Grant prompt cannot be rendered due to an error.`, { err });
       let callback = req.session.authRequest.callback;
@@ -62,7 +62,15 @@ module.exports = exports = {
       return;
     }
 
-    Object.assign(req.session.authRequest, client);
-    res.render('prompt', req.session.authRequest);
+    let templateContext = Object.assign({},
+      req.session.authRequest, // contents of the request itself
+      {
+        lodashGet: get,                 // useful in the template
+        validation: client.validation,  // needed to verify values meet requirements
+        user: req.session.user,         // the actual logged-in user
+        keys: Object.assign({}, client.custom, standardKeys)
+      }
+    );
+    res.render('prompt', templateContext);
   }
 };
