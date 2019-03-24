@@ -83,3 +83,6 @@ typings/
 *.env
 plan
 plan.out
+
+# For now, at least...
+*.psd

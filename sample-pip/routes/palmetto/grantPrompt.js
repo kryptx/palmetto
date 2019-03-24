@@ -39,7 +39,7 @@ module.exports = exports = {
   method: 'get',
   ensureLoggedIn: true,
   handle: ({ log, Request }) => async (req, res, next) => {
-    if(!req.session.authRequest || req.session.user.palmetto.id !== req.session.authRequest.id) {
+    if(!req.session.authRequest || req.session.user.palmetto.id.palmetto !== req.session.authRequest.id) {
       return next(badRequest('No authorization in progress.'));
     }
 
