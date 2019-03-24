@@ -8,7 +8,10 @@ const BodyParser = require('body-parser');
 const routes = require('./routes');
 const config = require('./config');
 const { createLogger } = require('bunyan');
-const log = createLogger({ name: 'palmetto-client' })
+const log = createLogger({
+  name: 'palmetto-client',
+  level: config.get('log_level')
+})
 
 let app = Express();
 app.use([ BodyParser.json(), BodyParser.urlencoded({ extended: true }) ]);

@@ -38,8 +38,18 @@ module.exports = exports = {
   method: 'get',
   ensureLoggedIn: true,
   handle: ({ log, Request }) => async (req, res, next) => {
-    if(!req.session.authRequest || req.session.user.palmetto.id.palmetto !== req.session.authRequest.id) {
+    if(!req.session.authRequest) {
       return next(badRequest('No authorization in progress.'));
+    }
+
+    if(req.session.user.palmetto.id.palmetto !== req.session.authRequest.id) {
+      // they are trying to authenticate as a different user.
+      // there's room for debate about what should be done about that,
+      // but clearing the session and redirecting to login seems safe.
+      req.session = { next: req.originalUrl };
+      res.set('Location', '/login');
+      res.status(302).send();
+      return;
     }
 
     let clientResponse, client;
@@ -54,7 +64,7 @@ module.exports = exports = {
     }
 
     let templateContext = Object.assign({},
-      req.session.authRequest, // contents of the request itself
+      req.session.authRequest,          // contents of the request itself
       {
         lodashGet: get,                 // useful in the template
         validation: client.validation,  // needed to verify values meet requirements
