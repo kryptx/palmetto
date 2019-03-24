@@ -22,19 +22,19 @@ module.exports = exports = {
     //   body.code_challenge_verifier = req.session.auth.palmetto.code_challenge_verifier;
     // }
 
-    log.trace(`POSTing data request to ${req.session.auth.palmetto.url}`, body);
+    log.debug(`POSTing data request to ${req.session.auth.palmetto.url}`, body);
 
     let response = await Request
       .post(req.session.auth.palmetto.url)
       .send(body)
       .catch(err => {
-        console.error('Error from user data endpoint', { err });
+        log.error('Error from user data endpoint', { err });
         return { ok: false };
       });
 
     if(!response.ok) return next(unauthorized('Authentication failed.'));
 
-    if(get(response.body, 'palmetto.id') !== req.session.auth.palmetto.id) {
+    if(get(response.body, 'id.palmetto') !== req.session.auth.palmetto.id) {
       return next(unauthorized('Authentication failed.'));
     }
 

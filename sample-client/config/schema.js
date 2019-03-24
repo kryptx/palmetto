@@ -59,5 +59,11 @@ module.exports = {
     format: String,
     default: "http://app.plmto.local:3200",
     env: 'BASE_URL'
+  },
+  log_level: {
+    doc: "The application log level",
+    format: String,
+    default: "debug",
+    env: 'LOG_LEVEL'
   }
 }
