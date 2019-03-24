@@ -8,11 +8,11 @@ const set = require('lodash.set');
 const Joi = require('joi');
 
 function getApprovedData(req) {
-  let result = {};
+  let result = { id: { palmetto: req.session.authRequest.id } };
   const approvedValues = req.session.authRequest.require.concat(req.body.allow);
-  for(let iv of approvedValues) {
+  for(let iv of approvedValues)
     set(result, iv, get(req.session.user.palmetto, iv));
-  }
+
   return result;
 }
 

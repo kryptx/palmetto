@@ -2,6 +2,7 @@
 
 const Joi = require('joi');
 const { unauthorized } = require('boom');
+const get = require('lodash.get');
 
 module.exports = exports = {
   path: '/palmetto/callback',
@@ -15,7 +16,6 @@ module.exports = exports = {
     const body = { code: req.query.code };
 
     // PKCE:
-    // const get = require('lodash.get');
     // if(!get(req.session, 'auth.palmetto.code_challenge_verifier')) {
     //   return next(unauthorized('Unable to verify code challenge.'))
     // } else {
@@ -34,8 +34,11 @@ module.exports = exports = {
 
     if(!response.ok) return next(unauthorized('Authentication failed.'));
 
+    if(get(response.body, 'palmetto.id') !== req.session.auth.palmetto.id) {
+      return next(unauthorized('Authentication failed.'));
+    }
+
     req.session.user = response.body;
-    req.session.user.id = req.session.auth.palmetto.id;
 
     let nextUrl = req.session.auth.next || '/';
     delete req.session.auth;

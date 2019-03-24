@@ -11,6 +11,7 @@
 * [Standard Identity Values](#standard-identity-values)
 * [Extension Identity Values](#extension-ivs)
 * [Client-defined validation](#client-defined-validation)
+
 ## Introduction and Discussion
 Palmetto is an experimental delegated authentication standard being created for use in applications.
 
@@ -30,8 +31,9 @@ Even more recently, the OpenID Connect (OIDC) standard was published, which buil
 Palmetto is an experimental standard which essentially extracts the concept of **an OpenID Connect authorization_code grant type with optional PKCE for `openid` scopes and `response_type: id_token`** into a single opinionated flow, offering direct, secure access to a user's identifying information no matter where they choose to store it.
 
 Other than limiting flow, grant type, and response contents, some other choices have been made:
-* The flow begins with an assertion to the resource server about the user's identity, including the custodian of the associated data.
+* The flow begins with an assertion in an explicitly sent Authorization header about the user's identity, including the custodian of the associated data.
   * Allows the resource server to know what users are trying to authenticate into it, even if they don't succeed.
+  * Dramatically increases the complexity of a CSRF attack, since the server should only accept an authorization code for data whose id matches the header.
   * Servers can still request authentication using the `WWW-Authenticate` header.
 * Servers are named by SRV records, so an ID is interpreted and resolved in a similar way to an e-mail address.
   * Helps keep IDs short.
@@ -81,7 +83,7 @@ Like OAuth, a Resource Server is the server requesting user identity information
 
 #### Endpoint: Palmetto Root
 
-The Resource Server should provide a URL in the `client` field. When accessed over HTTPS, it should respond with a JSON object containing a `callback` property, which contains a valid Palmetto callback URL for this service.
+The Resource Server should provide a URL in the `client` field. When accessed over HTTPS, it should respond with a JSON object containing a `callback` property, which contains a valid Palmetto callback URL for this service. It may also optionally specify [Extension IVs](#extension-ivs) and/or [Validation rules](#client-defined-validation) to be enforce on the received data.
 
 The Palmetto Root must be reachable from any PIP that should be allowed to provide authentication for it. The callback URL itself need only be accessible from the network of your application's users.
 
@@ -118,10 +120,12 @@ After the user has granted access to any required IVs to the satisfaction of the
 * `code` - The authorization code presented by the end user.
 * `code_challenge_verifier` - the random value that was previously hashed to form `code_challenge` (only needed if `code_challenge` was provided in the authorize URL).
 
-The PIP verifies that the hashes match and returns the body of the user with requested data. The Resource server should verify that the ID matches the authentication request, and that all required IVs are present.
+The PIP verifies that the hashes match and returns the body of the user with requested data. The body will have `id` at the root, containing a `palmetto` property containing the palmetto ID that the code provides access to. Other properties are nested at the appropriate location, using dot-syntax (and therefore values are always nested two levels). The Resource server should verify that the ID matches the original authentication request, and that all required IVs are present.
 
-* If not, it most likely means they are using a non-conforming PIP. You are encouraged to reject the login with a message about what is missing.
-* If so, the data may be treated as belonging to that Palmetto ID.
+* If the ID does not match, the user may have been tricked into authorizing against an attacker's account. Reject the request.
+* If IVs are missing, it most likely means they are using a non-conforming PIP. You are encouraged to reject the login with a message about what is missing.
+* If there is an error, the user probably refused to provide the required information.
+* If none of the above is true, the data may be treated as belonging to that Palmetto ID.
 
 ### Personal Identity Provider (PIP)
 
@@ -161,8 +165,7 @@ Other names appear to be redundant. For instance, there are not only primary and
 
 | Property | Contents |
 |---|---|
-| `id` | Palmetto ID |
-| `locale` | Locale |
+| `id.palmetto` | Palmetto ID |
 | `name.display` | Display name |
 | `name.given` | Given (first) name |
 | `name.middle` | Middle name |
@@ -184,6 +187,7 @@ Other names appear to be redundant. For instance, there are not only primary and
 | `location.territory` | Territory |
 | `location.postal_code` | Postal Code |
 | `location.tz` | Time Zone (IANA Format) |
+| `location.locale` | Locale |
 
 ## Extension IVs
 Apps can request (and users can provide) any information at all. To request a property not listed by the standard, follow the steps below.
@@ -192,14 +196,14 @@ Apps can request (and users can provide) any information at all. To request a pr
 Your name should be something like `noun.qualifier[:qualifier[:qualifier[...]]]` where each `qualifier` is roughly an adjective describing the value more precisely. Some examples might be:
 
 - `address.bitcoin` - Bitcoin address
-- `username.twitter` - Twitter username
 - `name.company` - Company Name
-- `key.rsa` or `key.rsa:public` - An RSA Public Key
 - `address.street:company` - Company Street Address
 - `address.email:company` - Company e-mail
 - `address.email:work` - Work e-mail
+- `id.twitter` or `username.twitter` - Twitter username
+- `key.rsa` or `key.rsa:public` - An RSA Public Key
 
-The PIP can (and probably should) provide the ability to "link" any key such that it always represents the value stored in another key, and they all change together. For example, a person might have the same "work" and "personal" e-mail; in such a case, it should be possible to specify that `address.email:work` points to the value contained in `address.email`.
+The PIP should provide the ability to "link" any key such that it always represents the value stored in another key, and they all change together. For example, a person might have the same "work" and "personal" e-mail; in such a case, it should be possible to specify that `address.email:work` always points to whatever value is stored in `address.email`.
 
 ### 2. Expose the key in your Palmetto root
 
