@@ -16,7 +16,7 @@
 }
 
 .grant-prompt.card {
-  max-width: 550px;
+  max-width: 600px;
   padding: 20px 40px;
 }
 
@@ -58,26 +58,36 @@ p {
 
 .iv_key {
   position: absolute;
-  font-size: 9px;
+  font-size: 10px;
   color: #888;
-  top: 0px;
+  top: 2px;
   float: left;
 }
 
 .iv_description {
-  position: relative;
+  position: absolute;
+  vertical-align: middle;
 }
 
 .iv_value {
   float: right;
   text-align: right;
   color: #936;
+  margin-left: 12px;
+}
+
+.iv_value input {
+  margin: 0px;
 }
 
 .palmettoId {
   background-image: linear-gradient(#fff, #eee);
 }
 
+.list-group, .list-group-item {
+  width: 100%;
+
+}
 .profile-img-card {
   width: 96px;
   height: 96px;
