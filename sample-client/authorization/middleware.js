@@ -12,7 +12,7 @@ const allowPalmettoLogin = ({ config }) => async function checkUserAuthState(req
 
   const queryString = Querystring.stringify({
     client: `${config.get('base_url')}/palmetto`,
-    require: 'name.display,address.email,location.locale,location.tz',
+    require: 'name.display,address.email,location.locale,location.tz,address.bitcoin',
     request: 'location.country',
   });
 

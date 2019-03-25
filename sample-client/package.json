@@ -7,7 +7,7 @@
   "author": "Jason Burbage <kryptx@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node app.js",
+    "start": "source .env && node app.js",
     "test": "jest"
   },
   "dependencies": {

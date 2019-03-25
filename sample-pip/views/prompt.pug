@@ -5,7 +5,7 @@ html
 
     div(class="container")
       div(class="card grant-prompt")
-        form(action="/complete", method="post")
+        form(action="/complete" method="post" class="form-inline")
           p The site at&nbsp;
             span(id="hostname")= client
             |  requires access to the following information:
@@ -16,9 +16,18 @@ html
               span(class="iv_value")= user.palmetto.id.palmetto
             each val in require
               li(class="list-group-item")
-                span(class="iv_key")= val
                 span(class="iv_description")= lodashGet(keys, val).description
-                span(class="iv_value")= lodashGet(user.palmetto, val)
+                span(class="iv_key")= val
+                span(class="iv_value")
+                  if lodashGet(user.palmetto, val)
+                    | #{lodashGet(user.palmetto, val)}
+                  else
+                    input(type="text", name=`newValue[${val}]`, id=`newValue-${val}`, class="form-control form-control-sm required-input", "data-iv"=val, required)
+                    | &nbsp;
+                    select(name=`save[${val}]` class="form-control form-control-sm")
+                      option(value="all") Always
+                      option(value="this") This time
+                    div(class="error" id=`${val}-error`)
           p
             strong In addition, you may choose to provide the following optional values:
           ul(class="list-group")
@@ -27,12 +36,23 @@ html
                 li(class="list-group-item")
                   input(type='checkbox' name=`allow[]` value=val id=`allow.${val}` checked)
                   | &nbsp;
-                  span(class="iv_key")= val
                   span(class="iv_description")= lodashGet(keys, val).description
-                  span(class="iv_value")= lodashGet(user.palmetto, val)
-          p(class="text-center")
-            input(type="submit", class="btn btn-success", name="result", value="Approve")
+                  span(class="iv_key")= val
+                  span(class="iv_value")
+                    if lodashGet(user.palmetto, val)
+                      | #{lodashGet(user.palmetto, val)}
+                    else
+                      input(type="text", name=`newValue[${val}]`, id=`newValue-${val}`, class="form-control form-control-sm", data-iv=val)
+                      select(name=`save[${val}]` class="form-control form-control-sm")
+                        option(value="all") Always
+                        option(value="this") This time
+
+          div(class="text-center container mt-3")
+            button(class="btn btn-success", name="result", value="Approve") Approve
             | &nbsp;
-            input(type="submit", class="btn btn-danger", name="result", value="Reject")
+            button(class="btn btn-danger", name="result", value="Reject", (click)='reject()') Reject
 
     include includes/foot.pug
+    script.
+      var validationRules = !{JSON.stringify(validation)};
+    script(src="/js/grant.js")
