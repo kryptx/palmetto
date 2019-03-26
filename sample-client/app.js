@@ -25,7 +25,7 @@ app.use(Session({
 let apone = new Apone(app);
 apone.register(routes, { config, Request, log });
 
-app.use(Express.static('public'));
+app.use(Express.static('public/html'));
 
 app.use(function(err, req, res, next) {
   if(!err.isBoom) { return next(err); }

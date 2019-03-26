@@ -1,0 +1,53 @@
+/* 2.3 Devices ======================================================= */
+
+$jacks-bg-color: #e3e8eb;
+
+$browser-action-color-1: #f44;
+$browser-action-color-2: #9b3;
+$browser-action-color-3: #fb5;
+$browser-action-size: 0.5em;
+
+.browser {
+    background: linear-gradient(#fff 1%, #eef1f3 10%);
+    position: relative;
+    padding-top: 2em;
+    border-radius: .4em;
+
+    &:before {
+        display: block;
+        position: absolute;
+        content: '';
+        top: 0.75em;
+        left: 1em;
+        width: $browser-action-size;
+        height: $browser-action-size;
+        border-radius: 50%;
+        background: $browser-action-color-1;
+        box-shadow: 0 0 0 1px $browser-action-color-1, 1.5em 0 0 1px $browser-action-color-2, 3em 0 0 1px $browser-action-color-3;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    &.shadow {
+        box-shadow: 0 0 1px rgba(0,0,0,.3), 0 2px 4px rgba(0,0,0,.09);
+    }
+
+    &.border {
+        border: 1px solid $border-color-default;
+    }
+}
+
+.fade-bottom {
+    &:after {
+        background: linear-gradient(rgba(255, 255, 255, 0), #fff 70%, #fff);
+        bottom: -25px;
+        content: "";
+        display: block;
+        height: 85px;
+        left: 0;
+        position: absolute;
+        right: 0;
+    }
+}

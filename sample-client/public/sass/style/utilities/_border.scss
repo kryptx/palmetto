@@ -1,0 +1,40 @@
+/* 2.2 Border ======================================================= */
+.b-x,
+.b-l {
+    border-left: 1px solid $border-color-default;
+}
+
+.b-x,
+.b-r {
+    border-right: 1px solid $border-color-default;
+}
+
+.b-y,
+.b-t {
+    border-top: 1px solid $border-color-default;
+}
+
+.b-y,
+.b-b {
+    border-bottom: 1px solid $border-color-default;
+}
+
+@each $i, $color in $color-scheme {
+    &.b-#{$i} {
+        border-color: $color;
+    }
+}
+
+.circle {
+    border-radius: 100%;
+    border: none;
+    box-shadow: 0 0 0 1px;
+}
+
+.shadow {
+    box-shadow: 0 2px 10px 1px rgba(0,0,0,.2);
+}
+
+.shadow-box {
+    box-shadow : 0 0 1px rgba(0, 0, 0, .1), 0 2px 6px rgba(0, 0, 0, .03);
+}

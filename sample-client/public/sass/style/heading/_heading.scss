@@ -1,0 +1,40 @@
+$overlapping-size: 5rem;
+$overlapping-size-big: $overlapping-size * 3;
+
+.navigation {
+    &.fixed-top {
+        ~ main .header {
+            padding-top: $navbar-min-height;
+        }
+    }
+}
+
+.header {
+    position: relative;
+
+    .container {
+        position: relative;
+        margin: 0 auto;
+    }
+
+    &.fullscreen {
+        padding-top: 90px;
+
+        .mockup {
+            max-width: 70%;
+        }
+    }
+
+    .mockup-half {
+        max-height: 350px;
+    }
+
+    &.page {
+        // background-image: url("../img/background/page.jpg");
+
+        .container {
+            padding-top: $section-padding;
+            padding-bottom: $section-padding;
+        }
+    }
+}

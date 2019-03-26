@@ -1,0 +1,13 @@
+/* 2.7 Position ======================================================= */
+
+.relative { position: relative; }
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .absolute#{$infix} {
+        @include media-breakpoint-up($breakpoint) {
+            position: absolute;
+        }
+    }
+}

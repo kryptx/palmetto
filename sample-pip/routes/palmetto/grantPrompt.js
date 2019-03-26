@@ -27,7 +27,7 @@ const validateRootResponse = async body => {
   if(result.custom) {
     const customKeys = Object.keys(result.custom);
     for(let key of customKeys) {
-      result.validators[key] = JsonSchema.compile(result.custom[key]);
+      result.validators[key] = JsonSchema.compile({ type: 'object', properties: { [key]: result.custom[key] } });
     }
   }
   return result;

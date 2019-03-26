@@ -1,0 +1,16 @@
+/* 2.11 Type ======================================================= */
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: $headings-font-family;
+    font-weight: $headings-font-weight;
+}
+
+.font-regular { font-size: $font-size-regular; }
+.font-xs { font-size: $font-size-tiny; }
+small, .small, .font-sm { font-size: $font-size-small; }
+.font-md { font-size: $font-size-medium; }
+.font-lg { font-size: $font-size-large; }
+.font-xl { font-size: $font-size-extra-large; }
+.font-xxl { font-size: $font-size-xx-large; }
+.font-l { font-size: $font-size-lg; }
