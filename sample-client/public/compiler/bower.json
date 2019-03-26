@@ -1,0 +1,22 @@
+{
+  "name": "palmetto-public",
+  "description": "Palmetto public website",
+  "main": "",
+  "author": "Jason Burbage <kryptx@gmail.com>",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "v4.0.0-beta",
+	"font-awesome": "^4.7.0"
+  },
+  "devDependencies": {
+
+  }
+}

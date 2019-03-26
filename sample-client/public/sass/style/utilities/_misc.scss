@@ -1,0 +1,47 @@
+/* 2.5 Misc ======================================================= */
+
+blockquote {
+    position: relative;
+
+    &:before {
+        @include font-awesome($fa-var-quote-left);
+
+        opacity: 0.5;
+        font-size: $font-size-medium;
+        font-weight: $font-weight-light;
+        position: absolute;
+        left: -16px;
+        top: -16px;
+    }
+}
+
+.blog-quote {
+    margin-top: 3em;
+    margin-bottom: 3em;
+    padding: 0 1rem;
+    position: relative;
+
+    &:before {
+        font-size: $font-size-large;
+        opacity: 0.2;
+        left: 0;
+    }
+
+    p {
+        font-size: $font-size-medium;
+        line-height: 1.3em;
+        font-weight: $font-weight-light;
+    }
+
+    @include media-breakpoint-up($grid-float-breakpoint) {
+        padding: 0 4rem;
+    }
+}
+
+.fullscreen {
+    min-height: 100vh;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}

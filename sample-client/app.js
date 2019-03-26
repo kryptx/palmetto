@@ -8,7 +8,10 @@ const BodyParser = require('body-parser');
 const routes = require('./routes');
 const config = require('./config');
 const { createLogger } = require('bunyan');
-const log = createLogger({ name: 'palmetto-client' })
+const log = createLogger({
+  name: 'palmetto-client',
+  level: config.get('log_level')
+})
 
 let app = Express();
 app.use([ BodyParser.json(), BodyParser.urlencoded({ extended: true }) ]);
@@ -22,7 +25,7 @@ app.use(Session({
 let apone = new Apone(app);
 apone.register(routes, { config, Request, log });
 
-app.use(Express.static('public'));
+app.use(Express.static('public/html'));
 
 app.use(function(err, req, res, next) {
   if(!err.isBoom) { return next(err); }

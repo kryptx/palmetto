@@ -15,9 +15,14 @@
   padding: 40px 40px;
 }
 
-.card-container.panel {
-  max-width: 450px;
+.grant-prompt.card {
+  max-width: 600px;
   padding: 20px 40px;
+}
+
+#hostname {
+  font-weight: bold;
+  color: #009;
 }
 
 p {
@@ -51,6 +56,38 @@ p {
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
 }
 
+.iv_key {
+  position: absolute;
+  font-size: 10px;
+  color: #888;
+  top: 2px;
+  float: left;
+}
+
+.iv_description {
+  position: absolute;
+  vertical-align: middle;
+}
+
+.iv_value {
+  float: right;
+  text-align: right;
+  color: #936;
+  margin-left: 12px;
+}
+
+.iv_value input {
+  margin: 0px;
+}
+
+.palmettoId {
+  background-image: linear-gradient(#fff, #eee);
+}
+
+.list-group, .list-group-item {
+  width: 100%;
+
+}
 .profile-img-card {
   width: 96px;
   height: 96px;

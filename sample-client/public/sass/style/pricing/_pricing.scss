@@ -1,0 +1,51 @@
+/* 7.1 General styles ======================================================= */
+
+$price-table-accent-bg-color: darken($html-background-color, 4%) !default;
+$price-value-font-size: $font-size-large;
+$price-table-body-bg: $price-table-accent-bg-color;
+$price-border-color: $border-color-default;
+$price-include-color: #6aa74c;
+$price-strike-color: #767676;
+
+$pricing-slider-selection-color: $color-3;
+$pricing-slider-handle-bg-color: $color-1;
+
+.pricing {
+    p {
+        line-height: 1.5em;
+    }
+
+    .pricing-value {
+        font-family: $font-family-complementary;
+        font-size: $price-value-font-size;
+
+        .price {
+            position: relative;
+
+            &:before,
+            &:after {
+                font-size: 0.35em;
+                font-weight: $font-weight-light;
+                font-style: italic;
+            }
+
+            &:before {
+                position: absolute;
+                content: '$';
+                top: 10px;
+                left: -15px;
+            }
+
+            &:after {
+                position: relative;
+                content: '/mo';
+            }
+
+            &.annual {
+                &:after {
+                    content: '/yr';
+                }
+            }
+        }
+    }
+}

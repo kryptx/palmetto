@@ -1,0 +1,46 @@
+/* ==========================================================================
+    [9. CUSTOM]
+========================================================================== */
+
+$big-mockup-width: 920px;
+
+p {
+    margin: 1rem 0;
+}
+
+.logo {
+    max-width: 180px;
+}
+
+.swiper-container {
+    .swiper-pagination-top {
+        bottom: auto;
+        top: 0;
+    }
+}
+
+hr[class*='bg'] {
+    border-top: 0;
+    height: 1px;
+}
+
+.post-content {
+    h2, h4 {
+        margin: 2.5rem 0 1rem 0;
+        font-weight: $font-weight-bold;
+    }
+
+    p:not(.lead) {
+        line-height: 1.75;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    img {
+        margin: 2.5rem auto;
+    }
+
+    .shadow {
+        box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+}

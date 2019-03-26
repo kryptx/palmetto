@@ -38,6 +38,11 @@ describe('ID Parser', () => {
     expect(result).toBeNull();
   });
 
+  it('should return null if the type is not palmetto', () => {
+    let result = parseHeader('whatdo plmto.com/jason');
+    expect(result).toBeNull();
+  });
+
   it('should not allow a query string', () => {
     let result = parseHeader('palmetto plmto.com/jason?foo=bar');
     expect(result).toBeNull();
