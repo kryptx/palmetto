@@ -47,9 +47,7 @@ Other than limiting flow, grant type, and response contents, some other choices 
 * All data values are handled individually; Identity Providers are expected to manage presentation to ensure users aren't visually overwhelmed.
 * All PIPs must enforce PKCE if presented but honor the authorization request even if it's not. Clients need only use it if the authorization code could be intercepted (most likely, in a mobile app).
 
-As with OpenID Connect, the user's authorization endpoint serves as a unique identifier of the person on the internet. It offers a standard interface to not only _authorize_ release of their data via some proprietary API, but also to _actually release it_ in a standardized envelope.
-
-Compared to OpenID Connect, however, Palmetto is simple to understand and implement, as demonstrated by the Identity Provider and sample client application in this repository. Our hope is that this simplifies authentication and account creation flows, particularly for hobbyist and amateur developers, and virtually eliminates the need for any user to store or send any password unless it's the only way they can log into their identity provider.
+Deeper comparison to OpenID Connect can be found [here](./oidc.md).
 
 Crucially, implementations of Identity Providers may choose to authenticate their users any way they wish, including using OpenID Connect or OAuth to delegate to another authority. Palmetto is solely intended to improve two things:
 
