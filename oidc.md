@@ -17,8 +17,15 @@ Since headers can't be encoded in URLs, if authentication always begins with a h
 
 This is directly in line with the original intent of the Authorization and WWW-Authenticate headers and gives greater power, security, and flexibility to end users.
 
+### SRV Records
+A Palmetto ID is meant to represent an identity, and therefore it's desirable that it be as easy to type and remember as an e-mail address.
+
+It's also meant to represent a real _instance_ of a service which implements a particular interface.
+
+While that interface is based on HTTPS, it's likely that identity providers will prefer to expose palmetto endpoints on non-standard ports or at highly qualified hostnames. SRV provides a layer of indirection to these implementations that does not impact the brevity of an ID. It also allows the URL to double as a public profile hosted by the PIP. Some of them may even provide a way for visitors to engage and request data.
+
 ### Root Document
-Since the result of authentication is always data, and never a token authorizing access, there is little need for the client to provide anything other than its own callback and any values that the PIP does not understand. Were Palmetto to still require this and expect clients to dynamically register, the provision of an ID and Secret would not provide any security benefit compared to simply telling it where to find the callback. As a consequence, client registration serves little purpose.
+Since the result of authentication is always data, and never a token authorizing access, there is little need for the client to provide anything other than its own callback and any values that the PIP does not understand. Were Palmetto to still require this and expect clients to dynamically register, the provisioning of an ID and Secret would not provide any security benefit compared to simply telling it where to find the callback. As a consequence, client registration serves little purpose.
 
 Since this means the identity provider must be able to retrieve the root document, there is a theoretical problematic scenario:
 1. An end-user wishes to authenticate with a resource server.
