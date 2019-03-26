@@ -2,7 +2,7 @@
 > It is not that we have so little time but that we lose so much. … The life we receive is not short but we make it so; we are not ill provided but use what we have wastefully.
 
 *Seneca the Younger, De Brevitate Vitæ [ On the shortness of life ]*
-
+## Table of Contents
 * [Introduction and Discussion](#introduction-and-discussion)
 * [Definitions](#definitions)
 * [Components](#components)

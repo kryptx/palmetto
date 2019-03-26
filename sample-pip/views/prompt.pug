@@ -22,11 +22,7 @@ html
                   if lodashGet(user.palmetto, val)
                     | #{lodashGet(user.palmetto, val)}
                   else
-                    input(type="text", name=`newValue[${val}]`, id=`newValue-${val}`, class="form-control form-control-sm required-input", "data-iv"=val, required)
-                    | &nbsp;
-                    select(name=`save[${val}]` class="form-control form-control-sm")
-                      option(value="all") Always
-                      option(value="this") This time
+                    input(type="text", name=`newValue[${val}]`, id=`newValue-${val}`, class="form-control form-control-sm required-input", data-iv=val, required)
                     div(class="error" id=`${val}-error`)
           p
             strong In addition, you may choose to provide the following optional values:
@@ -34,7 +30,7 @@ html
             each val in request
               label(for=`allow.${val}`)
                 li(class="list-group-item")
-                  input(type='checkbox' name=`allow[]` value=val id=`allow.${val}` checked)
+                  input(type='checkbox' name=`allow[]` value=val, id=`allow.${val}`, checked, class="allowed-value")
                   | &nbsp;
                   span(class="iv_description")= lodashGet(keys, val).description
                   span(class="iv_key")= val
@@ -43,14 +39,12 @@ html
                       | #{lodashGet(user.palmetto, val)}
                     else
                       input(type="text", name=`newValue[${val}]`, id=`newValue-${val}`, class="form-control form-control-sm", data-iv=val)
-                      select(name=`save[${val}]` class="form-control form-control-sm")
-                        option(value="all") Always
-                        option(value="this") This time
+                      div(class="error" id=`${val}-error`)
 
           div(class="text-center container mt-3")
             button(class="btn btn-success", name="result", value="Approve") Approve
             | &nbsp;
-            button(class="btn btn-danger", name="result", value="Reject", (click)='reject()') Reject
+            button(class="btn btn-danger", name="result", value="Reject") Reject
 
     include includes/foot.pug
     script.

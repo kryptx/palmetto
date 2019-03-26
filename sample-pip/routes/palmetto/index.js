@@ -3,6 +3,6 @@
 const Authorize = require('./authorize');
 const Complete = require('./complete');
 const GetData = require('./getData');
-const GrantPrompt = require('./grantPrompt');
+const Prompt = require('./prompt');
 
-module.exports = [ Authorize, Complete, GetData, GrantPrompt ];
+module.exports = [ Authorize, Complete, GetData, Prompt ];
