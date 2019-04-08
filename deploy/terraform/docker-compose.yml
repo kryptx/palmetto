@@ -32,6 +32,7 @@ services:
       - PGHOST=postgres
       - DB_HOST=db
       - SESSION_SECRET=trench
+      - APP_ENV=public
       # - DB_USER=rob
       # - DB_PASSWORD=123456
   client:
@@ -43,6 +44,7 @@ services:
       - "4001:3000"
     environment:
       - SESSION_SECRET=trench
+      - APP_ENV=public
   nginx:
     image: nginx:latest
     restart: on-failure
