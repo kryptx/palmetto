@@ -18,31 +18,31 @@ services:
       - COUCHDB_HOSTNAME=db
     links:
       - db
-  # pip:
-  #   build: ./sample-pip
-  #   command: sh -c "npm i && npm run dev"
-  #   restart: on-failure
-  #   depends_on:
-  #     - db_init
-  #   links:
-  #     - db
-  #   ports:
-  #     - "3100:3100"
-  #     - "9230:9229"
-  #   environment:
-  #     - PGHOST=postgres
-  #     - DB_HOST=db
-  #     - SESSION_SECRET=trench
-  #     - APP_ENV=local
-  # client:
-  #   build: ./sample-client
-  #   command: sh -c "npm i && npm run dev"
-  #   restart: on-failure
-  #   depends_on:
-  #     - pip
-  #   ports:
-  #     - "3200:3200"
-  #     - "9229:9229"
-  #   environment:
-  #     - SESSION_SECRET=trench
-  #     - APP_ENV=local
+  pip:
+    build: ./sample-pip
+    command: sh -c "npm i && npm run dev"
+    restart: on-failure
+    depends_on:
+      - db_init
+    links:
+      - db
+    ports:
+      - "3100:3100"
+      # - "9229:9229"
+    environment:
+      - PGHOST=postgres
+      - DB_HOST=db
+      - SESSION_SECRET=trench
+      - APP_ENV=local
+  client:
+    build: ./sample-client
+    command: sh -c "npm i && npm run dev"
+    restart: on-failure
+    depends_on:
+      - pip
+    ports:
+      - "3200:3200"
+      # - "9229:9229"
+    environment:
+      - SESSION_SECRET=trench
+      - APP_ENV=local
