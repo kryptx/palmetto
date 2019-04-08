@@ -4,9 +4,9 @@ function saveUser(userId) {
   var storageItem = browser.storage.local.get('accounts')
   storageItem.then(function(res) {
     var user = { id: userId };
-    if(!res || !res.push) res = [];
-    res.push(user);
-    browser.storage.local.set({ accounts: res });
+    if(!res.accounts || !res.accounts.push) res.accounts = [];
+    res.accounts.push(user);
+    browser.storage.local.set(res);
     try {
       drawAccount(user);
     } catch (e) {
