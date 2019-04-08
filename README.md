@@ -2,7 +2,7 @@
 > It is not that we have so little time but that we lose so much. … The life we receive is not short but we make it so; we are not ill provided but use what we have wastefully.
 
 *Seneca the Younger, De Brevitate Vitæ [ On the shortness of life ]*
-
+## Table of Contents
 * [Introduction and Discussion](#introduction-and-discussion)
 * [Definitions](#definitions)
 * [Components](#components)
@@ -47,9 +47,7 @@ Other than limiting flow, grant type, and response contents, some other choices 
 * All data values are handled individually; Identity Providers are expected to manage presentation to ensure users aren't visually overwhelmed.
 * All PIPs must enforce PKCE if presented but honor the authorization request even if it's not. Clients need only use it if the authorization code could be intercepted (most likely, in a mobile app).
 
-As with OpenID Connect, the user's authorization endpoint serves as a unique identifier of the person on the internet. It offers a standard interface to not only _authorize_ release of their data via some proprietary API, but also to _actually release it_ in a standardized envelope.
-
-Compared to OpenID Connect, however, Palmetto is simple to understand and implement, as demonstrated by the Identity Provider and sample client application in this repository. Our hope is that this simplifies authentication and account creation flows, particularly for hobbyist and amateur developers, and virtually eliminates the need for any user to store or send any password unless it's the only way they can log into their identity provider.
+Deeper comparison to OpenID Connect can be found [here](./oidc.md).
 
 Crucially, implementations of Identity Providers may choose to authenticate their users any way they wish, including using OpenID Connect or OAuth to delegate to another authority. Palmetto is solely intended to improve two things:
 
@@ -122,9 +120,11 @@ After the user has granted access to any required IVs to the satisfaction of the
 
 The PIP verifies that the hashes match and returns the body of the user with requested data. The body will have `id` at the root, containing a `palmetto` property containing the palmetto ID that the code provides access to. Other properties are nested at the appropriate location, using dot-syntax (and therefore values are always nested two levels). The Resource server should verify that the ID matches the original authentication request, and that all required IVs are present.
 
+* If there was no `code` but rather an `error`, check the error value:
+   * `access_denied`: The user refused to provide the required information.
+   * `invalid_request`: Something was wrong with the request.
 * If the ID does not match, the user may have been tricked into authorizing against an attacker's account. Reject the request.
 * If IVs are missing, it most likely means they are using a non-conforming PIP. You are encouraged to reject the login with a message about what is missing.
-* If there is an error, the user probably refused to provide the required information.
 * If none of the above is true, the data may be treated as belonging to that Palmetto ID.
 
 ### Personal Identity Provider (PIP)

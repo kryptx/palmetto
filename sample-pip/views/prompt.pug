@@ -4,24 +4,49 @@ html
   body
 
     div(class="container")
-      div(class="panel card-container")
-        form(action="/complete", method="post")
-          p
-            strong The site at #{client} requires access to the following information:
+      div(class="card grant-prompt")
+        form(action="/complete" method="post" class="form-inline")
+          p The site at&nbsp;
+            span(id="hostname")= client
+            |  requires access to the following information:
           ul(class="list-group")
+            li(class="list-group-item palmettoId")
+              span(class="iv_key") id.palmetto
+              span(class="iv_description") Your Palmetto ID
+              span(class="iv_value")= user.palmetto.id.palmetto
             each val in require
-              li(class="list-group-item")= val
+              li(class="list-group-item")
+                span(class="iv_description")= lodashGet(keys, val).description
+                span(class="iv_key")= val
+                span(class="iv_value")
+                  if lodashGet(user.palmetto, val)
+                    | #{lodashGet(user.palmetto, val)}
+                  else
+                    input(type="text", name=`newValue[${val}]`, id=`newValue-${val}`, class="form-control form-control-sm required-input", data-iv=val, required)
+                    div(class="error" id=`${val}-error`)
           p
             strong In addition, you may choose to provide the following optional values:
           ul(class="list-group")
-          - for(let i = 0; i < request.length; i++)
-            label(for=`allow.${request[i]}`)
-              li(class="list-group-item")
-                input(type='checkbox' name=`allow[]` value=request[i] id=`allow.${request[i]}` checked)
-                |  #{request[i]}
-          p(class="text-center")
-            input(type="submit", class="btn btn-success", name="result", value="Approve")
+            each val in request
+              label(for=`allow.${val}`)
+                li(class="list-group-item")
+                  input(type='checkbox' name=`allow[]` value=val, id=`allow.${val}`, checked, class="allowed-value")
+                  | &nbsp;
+                  span(class="iv_description")= lodashGet(keys, val).description
+                  span(class="iv_key")= val
+                  span(class="iv_value")
+                    if lodashGet(user.palmetto, val)
+                      | #{lodashGet(user.palmetto, val)}
+                    else
+                      input(type="text", name=`newValue[${val}]`, id=`newValue-${val}`, class="form-control form-control-sm", data-iv=val)
+                      div(class="error" id=`${val}-error`)
+
+          div(class="text-center container mt-3")
+            button(class="btn btn-success", name="result", value="Approve") Approve
             | &nbsp;
-            input(type="submit", class="btn btn-danger", name="result", value="Reject")
+            button(class="btn btn-danger", name="result", value="Reject") Reject
 
     include includes/foot.pug
+    script.
+      var validationRules = !{JSON.stringify(validation)};
+    script(src="/js/grant.js")

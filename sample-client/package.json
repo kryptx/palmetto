@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "node app.js --inspect=0.0.0.0:9229",
-    "start": "node app.js",
+    "start": "source .env && node app.js",
     "test": "jest"
   },
   "dependencies": {

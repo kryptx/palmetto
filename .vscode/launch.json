@@ -10,7 +10,8 @@
       "name": "PIP: Launch",
       "program": "${workspaceFolder}/sample-pip/app.js",
       "cwd": "${workspaceFolder}/sample-pip",
-      "envFile": "${workspaceFolder}/sample-pip/.env"
+      "envFile": "${workspaceFolder}/sample-pip/.env",
+      "outputCapture": "std"
     },
     {
       "type": "node",
@@ -18,7 +19,8 @@
       "name": "Client: Launch",
       "program": "${workspaceFolder}/sample-client/app.js",
       "cwd": "${workspaceFolder}/sample-client",
-      "envFile": "${workspaceFolder}/sample-client/.env"
+      "envFile": "${workspaceFolder}/sample-client/.env",
+      "outputCapture": "std"
     },
     {
       "type": "node",

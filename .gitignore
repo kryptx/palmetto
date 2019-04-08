@@ -83,3 +83,7 @@ typings/
 *.env
 plan
 plan.out
+
+# For now, at least...
+*.psd
+sample-client/public/doc

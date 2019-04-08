@@ -1,0 +1,109 @@
+// [ FONTS ]
+$font-family-template: "Open Sans", $font-family-base;
+$font-family-complementary: "Lato", "Open Sans", $font-family-template;
+$font-family-handwritten: "Caveat", cursive, $font-family-template;;
+$font-family-awesome: "FontAwesome";
+
+// Updated to Bootstrap 4 fix
+$grid-float-breakpoint: md;
+$grid-float-breakpoint-max: sm;
+
+// [ COLORS ]
+$color-1: #ffffff !default;
+$color-2: #646f79 !default;
+$color-3: #7b68ee !default;
+$color-4: #017dc3 !default;
+$color-5: #143350 !default;
+$color-6: #f4f8fb !default;
+
+$color-scheme: (
+    1: $color-1,
+    2: $color-2,
+    3: $color-3,
+    4: $color-4,
+    5: $color-5,
+    6: $color-6
+);
+
+// [ DEFAULTS ]
+$html-text-color: darken($color-2, 15%) !default;
+$html-background-color: $color-1 !default;
+
+$input-border: #D8E1E5;
+$input-padding-y : $input-btn-padding-y;
+$input-padding-x: $input-btn-padding-x;
+
+$padding-default: 60px !default;
+
+$strike-color: lighten($html-text-color, 25%);
+$border-color-default: #edf4f8; //$input-border;
+$paragraph-margin-default: 1.5rem !default;
+$color-accent: $color-3 !default;
+$color-accent-inverse: $color-1 !default;
+
+$swiper-border-color: $color-5;
+
+// [ SIZES ]
+// fonts
+// $font-size-base: 16px;
+$font-size-tiny: $font-size-base * 0.45;
+$font-size-small: $font-size-base * 0.65;
+$font-size-regular: $font-size-base;
+$font-size-medium: $font-size-base * 2;
+$font-size-large: $font-size-base * 3.25;
+$font-size-extra-large: $font-size-base * 4.5;
+$font-size-xx-large: $font-size-base * 6.5;
+
+$font-weight-thin: 100;
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-bold: 700;
+$font-weight-extra-bold: 900;
+
+// [ HEADINGS ]
+// $headings-background-color: $color-1;
+$headings-font-family: $font-family-complementary;
+$headings-font-weight: $font-weight-regular;
+$headings-font-color: $color-3;
+
+// [ NAVIGATION ]
+$navbar-min-height: 90px;
+$navbar-font-size: 0.85rem;
+$navbar-background-color: $color-1;
+$navbar-text-color: $html-text-color;
+$navbar-text-color-hover: darken($html-text-color, 5%);
+$navbar-text-color-dark: $color-5;
+$navbar-text-color-dark-hover: darken($navbar-text-color-dark, 15%);
+
+$navbar-fixed-top-background-color: transparent;
+$navbar-fixed-text-color: $color-1;
+$navbar-fixed-text-color-hover: darken($color-1, 15%);
+
+$navbar-sticky-background-color : $color-1;
+$navbar-sticky-text-color: $color-2;
+$navbar-sticky-text-color-hover: $color-3;
+
+$navbar-side-width: 250px;
+$navbar-side-background-color: $color-1;
+$navbar-side-text-color: $color-3;
+$navbar-side-text-color-hover: darken($navbar-side-text-color, 15%);
+$navbar-side-border-color: $border-color-default;
+
+$nav-pills-light-link-active-bg: $color-1;
+$nav-pills-light-link-active-color: darken($html-text-color, 15%);
+$nav-pills-light-link-active-shadow-bg: darken($color-6, 15%);
+
+// [ SECTION ]
+$section-padding: $padding-default * 1.5;
+
+// [ FORMS ]
+// inputs
+$input-padding-base: $input-padding-y;
+$input-border-color: $border-color-default;
+$input-text-color: darken($input-border-color, 12%);
+$input-text-color-focus: darken($input-text-color, 22%);
+
+// buttons
+$btn-font-family: $font-family-template;
+$btn-font-size: $font-size-base;
+$btn-font-color: $color-1 !default;

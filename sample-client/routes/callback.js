@@ -32,8 +32,10 @@ module.exports = exports = {
         return { ok: false };
       });
 
+    // should never happen. This call should probably retry unless the status code was 4XX
     if(!response.ok) return next(unauthorized('Authentication failed.'));
 
+    // if this does not match, one explanation is that an attacker is trying to poison the user's session
     if(get(response.body, 'id.palmetto') !== req.session.auth.palmetto.id) {
       return next(unauthorized('Authentication failed.'));
     }

@@ -11,6 +11,7 @@ const { boomify } = require('boom');
 const routes = require('./routes');
 const { createLogger } = require('bunyan');
 const log = createLogger({ name: 'palmetto-pip' })
+const ensureLoggedIn = require('./lib/ensureLoggedIn')
 
 const config = require('./config');
 const db = Nano(`http://${config.get('db.host')}:${config.get('db.port')}`)
@@ -26,7 +27,7 @@ app.use(Session({
   saveUninitialized: true
 }));
 
-let apone = new Apone(app);
+let apone = new Apone(app, { extensions: [ ensureLoggedIn ] });
 apone.register(routes, { config, db, cache, Request, log });
 
 app.use(Express.static('public'));
