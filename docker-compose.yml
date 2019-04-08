@@ -28,7 +28,7 @@ services:
       - db
     ports:
       - "3100:3100"
-      # - "9229:9229"
+      - "9329:9229"
     environment:
       - PGHOST=postgres
       - DB_HOST=db
@@ -42,7 +42,7 @@ services:
       - pip
     ports:
       - "3200:3200"
-      # - "9229:9229"
+      - "9429:9229"
     environment:
       - SESSION_SECRET=trench
       - APP_ENV=local
