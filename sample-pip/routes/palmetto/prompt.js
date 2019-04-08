@@ -1,6 +1,7 @@
 'use strict';
 
 const { badRequest } = require('boom');
+const { promisify } = require('util');
 const Joi = require('joi');
 const JsonSchema = require('../../lib/jsonSchema');
 const get = require('lodash.get');
@@ -44,7 +45,9 @@ module.exports = exports = {
       // they are trying to authenticate as a different user.
       // there's room for debate about what should be done about that,
       // but clearing the session and redirecting to login seems safe. (TODO: include an error message)
-      req.session = { next: req.originalUrl };
+      let regenAsync = promisify(req.session.regenerate).bind(req.session);
+      await regenAsync();
+      req.session.next = req.originalUrl;
       res.set('Location', '/login');
       res.status(302).send();
       return;
