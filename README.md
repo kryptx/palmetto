@@ -1,7 +1,14 @@
 # Palmetto Open Identity Standard
-> It is not that we have so little time but that we lose so much. … The life we receive is not short but we make it so; we are not ill provided but use what we have wastefully.
+This project is mostly abandoned.
 
-*Seneca the Younger, De Brevitate Vitæ [ On the shortness of life ]*
+I believe the better course of action is to build tools and advocacy around the existing OpenID technologies that ultimately solve the same problem. Not because they are the perfect solution, but because they are an appropriate solution which is already implemented and secured at large scale.
+
+Users creating a new password at every site is a very serious security issue and as engineers we should be very concerned that this trend has only continued, and work to stop it. Password managers mitigate this problem but they do not solve it. Allowing visitors on my website to authenticate with *any* standard-compatible user account should be by far the simplest path to adding login functionality -- not one of the hardest. Look at the sample app in this repo to see how easy it can be.
+
+Once we have solved that problem, we can consider how to improve further.
+
+I decided to make this public anyway since there may be some ideas that people will benefit from.
+
 ## Table of Contents
 * [Introduction and Discussion](#introduction-and-discussion)
 * [Definitions](#definitions)
